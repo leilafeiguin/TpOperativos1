@@ -3,12 +3,15 @@
 #include <stdint.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 int main(void) {
 	struct sockaddr_in direccionServidor;
 	direccionServidor.sin_family = AF_INET;
 	direccionServidor.sin_addr.s_addr = INADDR_ANY;
-	direccionServidor.sin_port = htons(1234);
+	direccionServidor.sin_port = htons(1239);
 
 	int servidor = socket(AF_INET, SOCK_STREAM, 0);
 

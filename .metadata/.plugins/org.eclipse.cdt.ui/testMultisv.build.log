@@ -1,0 +1,15 @@
+17:58:56 **** Incremental Build of configuration Debug for project testMultisv ****
+make all 
+Building file: ../src/testMultisv.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/testMultisv.d" -MT"src/testMultisv.d" -o "src/testMultisv.o" "../src/testMultisv.c"
+Finished building: ../src/testMultisv.c
+ 
+Building target: testMultisv
+Invoking: GCC C Linker
+gcc  -o "testMultisv"  ./src/testMultisv.o   
+Finished building target: testMultisv
+ 
+
+17:58:56 Build Finished (took 118ms)
+
