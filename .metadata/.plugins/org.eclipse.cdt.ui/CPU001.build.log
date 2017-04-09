@@ -1,4 +1,4 @@
-17:45:00 **** Incremental Build of configuration Debug for project CPU001 ****
+18:25:13 **** Incremental Build of configuration Debug for project CPU001 ****
 make all 
 Building file: ../src/CPU001.c
 Invoking: GCC C Compiler
@@ -32,9 +32,6 @@ In file included from ../src/CPU001.c:2:0:
 /usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[4]’
  extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
               ^
-../src/CPU001.c:45:3: warning: format not a string literal and no format arguments [-Wformat-security]
-   printf(mensaje);
-   ^
 ../src/CPU001.c:15:6: warning: unused variable ‘host’ [-Wunused-variable]
   int host;
       ^
@@ -46,5 +43,5 @@ gcc  -o "CPU001"  ./src/CPU001.o
 Finished building target: CPU001
  
 
-17:45:00 Build Finished (took 120ms)
+18:25:14 Build Finished (took 117ms)
 

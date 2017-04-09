@@ -39,11 +39,12 @@ int main(void) {
 	}
 
 	while (1) {
+		char puerto[6];
+
+		recv(cliente, puerto, 6, 0);
+		printf("Mi configuracion es: \n ip %s \n port %s", ip, puerto);
+
 		char mensaje[1000];
-
-		recv(cliente, mensaje, 100, 0);
-		printf(mensaje);
-
 		scanf("%s", mensaje);
 		send(cliente, mensaje, strlen(mensaje), 0);
 	}
