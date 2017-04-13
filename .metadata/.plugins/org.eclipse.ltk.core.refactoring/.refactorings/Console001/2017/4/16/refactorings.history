@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Console001/src/configuracionConsole001&apos; to &apos;configConsole001&apos;" description="Rename resource &apos;configuracionConsole001&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/configuracionConsole001" name="configConsole001" stamp="1492114860143" updateReferences="true"/>
+</session>

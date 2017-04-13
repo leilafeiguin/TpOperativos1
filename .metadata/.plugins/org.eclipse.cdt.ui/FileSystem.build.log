@@ -1,0 +1,36 @@
+17:42:53 **** Incremental Build of configuration Debug for project FileSystem ****
+make all 
+Building file: ../src/FileSystem.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/FileSystem.d" -MT"src/FileSystem.d" -o "src/FileSystem.o" "../src/FileSystem.c"
+../src/FileSystem.c: In function ‘main’:
+../src/FileSystem.c:17:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
+  fgets(&ip, sizeof(ip)+1, archivoConfig);
+  ^
+In file included from ../src/FileSystem.c:2:0:
+/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[20]’
+ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+              ^
+../src/FileSystem.c:18:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
+  fgets(&port, sizeof(port)+1, archivoConfig);
+  ^
+In file included from ../src/FileSystem.c:2:0:
+/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[15]’
+ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+              ^
+../src/FileSystem.c:45:3: warning: format ‘%c’ expects argument of type ‘int’, but argument 2 has type ‘char *’ [-Wformat=]
+   printf("%c /n", mensaje);
+   ^
+../src/FileSystem.c:13:6: warning: unused variable ‘host’ [-Wunused-variable]
+  int host;
+      ^
+Finished building: ../src/FileSystem.c
+ 
+Building target: FileSystem
+Invoking: GCC C Linker
+gcc  -o "FileSystem"  ./src/FileSystem.o   
+Finished building target: FileSystem
+ 
+
+17:42:53 Build Finished (took 119ms)
+

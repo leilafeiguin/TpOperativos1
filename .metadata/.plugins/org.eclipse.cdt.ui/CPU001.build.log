@@ -1,47 +1,6 @@
-18:25:13 **** Incremental Build of configuration Debug for project CPU001 ****
+17:45:24 **** Incremental Build of configuration Debug for project CPU001 ****
 make all 
-Building file: ../src/CPU001.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/CPU001.d" -MT"src/CPU001.d" -o "src/CPU001.o" "../src/CPU001.c"
-../src/CPU001.c: In function ‘main’:
-../src/CPU001.c:19:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&basura ,sizeof(basura)+1,archivoConfig);
-  ^
-In file included from ../src/CPU001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[15]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/CPU001.c:20:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&conf, sizeof(conf)+1, archivoConfig);
-  ^
-In file included from ../src/CPU001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[15]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/CPU001.c:21:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&ip, sizeof(ip)+1, archivoConfig);
-  ^
-In file included from ../src/CPU001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[20]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/CPU001.c:22:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&port, sizeof(port)+1, archivoConfig);
-  ^
-In file included from ../src/CPU001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[4]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/CPU001.c:15:6: warning: unused variable ‘host’ [-Wunused-variable]
-  int host;
-      ^
-Finished building: ../src/CPU001.c
- 
-Building target: CPU001
-Invoking: GCC C Linker
-gcc  -o "CPU001"  ./src/CPU001.o   
-Finished building target: CPU001
- 
+make: No se hace nada para «all».
 
-18:25:14 Build Finished (took 117ms)
+17:45:24 Build Finished (took 75ms)
 

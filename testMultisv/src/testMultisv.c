@@ -121,9 +121,11 @@ int main(int argc , char *argv[])
             //inform user of socket number - used in send and receive commands
             printf("New connection , socket fd is %d , ip is : %s , port : %d \n" , new_socket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
 
+
             //a message
-            char *message;
-            memcpy(&message, address.sin_port, 5);
+            char *message = "hola";
+
+            //memcpy(&message, address.sin_port, 5);
 
             //send new connection greeting message
             if( send(new_socket, message, strlen(message), 0) != strlen(message) )

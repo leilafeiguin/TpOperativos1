@@ -1,20 +1,3 @@
-18:46:37 **** Incremental Build of configuration Debug for project testMultisv ****
+17:45:24 **** Incremental Build of configuration Debug for project CPU001 ****
 make all 
-Building file: ../src/testMultisv.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/testMultisv.d" -MT"src/testMultisv.d" -o "src/testMultisv.o" "../src/testMultisv.c"
-../src/testMultisv.c: In function ‘main’:
-../src/testMultisv.c:126:13: warning: passing argument 2 of ‘memcpy’ makes pointer from integer without a cast [enabled by default]
-             memcpy(&message, address.sin_port, 5);
-             ^
-In file included from ../src/testMultisv.c:4:0:
-/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘in_port_t’
- extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
-              ^
-Finished building: ../src/testMultisv.c
- 
-Building target: testMultisv
-Invoking: GCC C Linker
-gcc  -o "testMultisv"  ./src/testMultisv.o   
-Finished building target: testMultisv
- 
+make: No se hace nada para «all».
