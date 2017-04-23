@@ -7,24 +7,26 @@
 
 int main(void) {
 	struct sockaddr_in direccionServidor;
+
 	char ip[20];
+	char port[15];
 	int host;
 
 	FILE *archivoConfig;
-	archivoConfig= fopen("configuracionConsole001", "r");
+	archivoConfig= fopen("/home/utnso/workspace/tp-2017-1c-AsadoClash/FileSystem/src/configFileSystem", "r");
 	fgets(&ip, sizeof(ip)+1, archivoConfig);
-	printf(ip);
-	//fgets(direccionServidor.sin_family, sizeof(direccionServidor.sin_family), archivoConfig);
-	//fgets(ip, sizeof(ip),archivoConfig);
-	//direccionServidor.sin_addr.s_addr = inet_addr(ip);
-	//fgets(host, sizeof(host),archivoConfig);
-	//direccionServidor.sin_port = htons(host);
+	fgets(&port, sizeof(port)+1, archivoConfig);
+
+
+	//printf(conf);
+	//printf(ip);
+	//printf(port);
 
 	fclose(archivoConfig);
 
-	//direccionServidor.sin_family = AF_INET;
-	//direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
-	//direccionServidor.sin_port = htons(1234);
+	direccionServidor.sin_family = AF_INET;
+	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
+	direccionServidor.sin_port = htons(8888);
 
 	int cliente = socket(AF_INET, SOCK_STREAM, 0);
 	if (connect(cliente, (void*) &direccionServidor, sizeof(direccionServidor)) != 0) {
@@ -32,12 +34,20 @@ int main(void) {
 		return 1;
 	}
 
+	char *bienvenida = "hola soy [inserte nombre]";
+	send(cliente, bienvenida, strlen(bienvenida), 0);
+	//free(bienvenida);
+
 	while (1) {
 		char mensaje[1000];
-		scanf("%s", mensaje);
 
+		recv(cliente, mensaje, 100, 0);
+		printf("%c /n", mensaje);
+
+		scanf("%s", mensaje);
 		send(cliente, mensaje, strlen(mensaje), 0);
 	}
+
 
 	return 0;
 }

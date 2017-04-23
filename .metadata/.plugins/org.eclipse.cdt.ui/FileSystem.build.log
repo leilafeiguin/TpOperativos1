@@ -1,4 +1,4 @@
-17:42:53 **** Incremental Build of configuration Debug for project FileSystem ****
+17:56:21 **** Incremental Build of configuration Debug for project FileSystem ****
 make all 
 Building file: ../src/FileSystem.c
 Invoking: GCC C Compiler
@@ -32,5 +32,5 @@ gcc  -o "FileSystem"  ./src/FileSystem.o
 Finished building target: FileSystem
  
 
-17:42:53 Build Finished (took 119ms)
+17:56:21 Build Finished (took 116ms)
 

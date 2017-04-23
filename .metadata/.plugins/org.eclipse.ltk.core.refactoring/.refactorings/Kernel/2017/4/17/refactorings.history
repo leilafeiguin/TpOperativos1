@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Kernel/src/kernel.config&apos; to &apos;kernel.cfg&apos;" description="Rename resource &apos;kernel.config&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/kernel.config" name="kernel.cfg" stamp="1492980979965" updateReferences="true"/>&#x0A;<refactoring comment="Move &apos;kernel.cfg&apos; to &apos;Kernel&apos;" description="Move &apos;kernel.cfg&apos; to &apos;Kernel&apos;" destination="/Kernel" element1="src/kernel.cfg" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1492981101688" updateReferences="true"/>
+</session>
