@@ -1,36 +1,6 @@
-17:36:16 **** Incremental Build of configuration Debug for project Console001 ****
+20:39:28 **** Incremental Build of configuration Debug for project Console001 ****
 make all 
-Building file: ../src/Console001.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Console001.d" -MT"src/Console001.d" -o "src/Console001.o" "../src/Console001.c"
-../src/Console001.c: In function ‘main’:
-../src/Console001.c:17:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&ip, sizeof(ip)+1, archivoConfig);
-  ^
-In file included from ../src/Console001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[20]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/Console001.c:18:2: warning: passing argument 1 of ‘fgets’ from incompatible pointer type [enabled by default]
-  fgets(&port, sizeof(port)+1, archivoConfig);
-  ^
-In file included from ../src/Console001.c:2:0:
-/usr/include/stdio.h:622:14: note: expected ‘char * __restrict__’ but argument is of type ‘char (*)[15]’
- extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-              ^
-../src/Console001.c:45:3: warning: format ‘%c’ expects argument of type ‘int’, but argument 2 has type ‘char *’ [-Wformat=]
-   printf("%c /n", mensaje);
-   ^
-../src/Console001.c:13:6: warning: unused variable ‘host’ [-Wunused-variable]
-  int host;
-      ^
-Finished building: ../src/Console001.c
- 
-Building target: Console001
-Invoking: GCC C Linker
-gcc  -o "Console001"  ./src/Console001.o   -lcommons
-Finished building target: Console001
- 
+make: No se hace nada para «all».
 
-17:36:16 Build Finished (took 116ms)
+20:39:28 Build Finished (took 115ms)
 

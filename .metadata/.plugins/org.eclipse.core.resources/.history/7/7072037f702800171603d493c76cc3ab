@@ -1,0 +1,193 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <commons/log.h>
+#include <commons/collections/list.h>
+#include <commons/config.h>
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+
+
+typedef struct kernell_configuracion {
+	int PUERTO_PROG;
+	int PUERTO_CPU;
+	char* IP_MEMORIA;
+	int PUERTO_MEMORIA;
+	char* IP_FS;
+	int PUERTO_FS;
+	int QUANTUM;
+	int QUANTUM_SLEEP;
+	char* ALGORITMO;
+	int GRADO_MULTIPROG;
+	int STACK_SIZE;
+	char** SEM_IDS;
+	char** SEM_INIT;
+	char** SHARED_VARS;
+} kernell_configuracion;
+
+
+int MAXIMO_TAMANO_DATOS = 100;
+
+char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo) {
+	char* valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_string_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %s\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo) {
+	int valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_int_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %i\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
+	char** valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_array_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %s\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+
+kernell_configuracion get_configuracion() {
+	puts("Inicializando proceso Kernel\n");
+	kernell_configuracion configuracion;
+	// Obtiene el archivo de configuracion
+	char* path = "./config-kernell.cfg";
+	t_config* archivo_configuracion = config_create(path);
+
+	configuracion.PUERTO_PROG = get_campo_config_int(archivo_configuracion, "PUERTO_PROG");
+	configuracion.PUERTO_CPU = get_campo_config_int(archivo_configuracion, "PUERTO_CPU");
+	configuracion.IP_MEMORIA = get_campo_config_char(archivo_configuracion, "IP_MEMORIA");
+	configuracion.PUERTO_MEMORIA = get_campo_config_int(archivo_configuracion, "PUERTO_MEMORIA");
+	configuracion.IP_FS = get_campo_config_char(archivo_configuracion, "IP_FS");
+	configuracion.PUERTO_FS = get_campo_config_int(archivo_configuracion, "PUERTO_FS");
+	configuracion.QUANTUM = get_campo_config_int(archivo_configuracion, "QUANTUM");
+	configuracion.QUANTUM_SLEEP = get_campo_config_int(archivo_configuracion, "QUANTUM_SLEEP");
+	configuracion.ALGORITMO = get_campo_config_char(archivo_configuracion, "ALGORITMO");
+	configuracion.GRADO_MULTIPROG = get_campo_config_int(archivo_configuracion, "GRADO_MULTIPROG");
+	configuracion.SEM_IDS = get_campo_config_array(archivo_configuracion, "SEM_IDS");
+	configuracion.SEM_INIT = get_campo_config_array(archivo_configuracion, "SEM_INIT");
+	configuracion.SHARED_VARS = get_campo_config_array(archivo_configuracion, "SHARED_VARS");
+	configuracion.STACK_SIZE = get_campo_config_int(archivo_configuracion, "STACK_SIZE");
+
+	return configuracion;
+}
+
+
+int main(void){
+		printf("hola");
+		kernell_configuracion configuracion = get_configuracion();
+		sleep(500);
+		printf("chau");
+	return 0;
+}
+
+
+/*
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <commons/config.h>
+
+
+typedef struct {
+  int PUERTO_PROG;
+  int PUERTO_CPU;
+  char* IP_MEMORIA;    //AVERIGUAR TIPO DE DATO
+  int PUERTO_MEMORIA;
+  char* IP_FS;    //AVERIGUAR TIPO DE DATO
+  int PUERTO_FS;
+  int QUANTUM;
+  int QUANTUM_SLEEP;
+  char* ALGORITMO;
+  int GRADO_MULTIPROG;
+  char** SEM_IDS;
+  char** SEM_INIT;
+  char** SHARED_VARS;
+  int STACK_SIZE;
+} CONFIGURACION_KERNEL;
+
+
+void leerArchivoConfiguracion();
+
+CONFIGURACION_KERNEL *config_kernel;
+
+
+int main(void) {
+
+	printf("hola");
+
+	leerArchivoConfiguracion();
+
+
+	return 0;
+}
+
+
+
+void leerArchivoConfiguracion (){
+	char* path = "./kernel.cfg";
+	t_config* fileKernel = config_create(path);
+
+	printf(config_get_int_value(fileKernel, "PUERTO_PROG"));
+
+	config_kernel->PUERTO_PROG = config_get_int_value(fileKernel, "PUERTO_PROG");
+	config_kernel->PUERTO_CPU = config_get_int_value(fileKernel, "PUERTO_CPU");
+	config_kernel->IP_MEMORIA = config_get_string_value(fileKernel, "IP_MEMORIA");
+	config_kernel->PUERTO_MEMORIA = config_get_int_value(fileKernel, "PUERTO_MEMORIA");
+	config_kernel->IP_FS = config_get_string_value(fileKernel, "IP_FS");
+	config_kernel->PUERTO_FS = config_get_int_value(fileKernel, "PUERTO_FS");
+	config_kernel->QUANTUM = config_get_int_value(fileKernel, "QUANTUM");
+	config_kernel->QUANTUM_SLEEP = config_get_int_value(fileKernel, "QUANTUM_SLEEP");
+	config_kernel->ALGORITMO = config_get_string_value(fileKernel, "ALGORITMO");
+	config_kernel->GRADO_MULTIPROG = config_get_int_value(fileKernel, "GRADO_MULTIPROG");
+	config_kernel->SEM_IDS = config_get_array_value(fileKernel, "SEM_IDS");
+	config_kernel->SEM_INIT = config_get_array_value(fileKernel, "SEM_INIT");
+	config_kernel->SHARED_VARS = config_get_array_value(fileKernel, "SHARED_VARS");
+	config_kernel->STACK_SIZE = config_get_int_value(fileKernel, "STACK_SIZE");
+
+
+	printf(config_kernel->PUERTO_CPU);
+
+
+
+}
+
+*/
+

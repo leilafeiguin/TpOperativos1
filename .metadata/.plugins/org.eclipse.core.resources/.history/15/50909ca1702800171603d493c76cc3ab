@@ -1,0 +1,106 @@
+#ifndef FUNCIONESGENERALES_H_
+#define FUNCIONESGENERALES_H_
+
+#include <parser/metadata_program.h>
+#include <commons/log.h>
+#include <commons/collections/list.h>
+#include <commons/config.h>
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+int MAXIMO_TAMANO_DATOS = 100;
+
+char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo) {
+	char* valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_string_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %s\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo) {
+	int valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_int_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %i\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
+	char** valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_array_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %s\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
+struct in_addr get_direccion_ip() {
+	char hostname[1024];
+	hostname[1023] = '\0';
+	gethostname(hostname, 1023);
+	struct hostent *h = gethostbyname(hostname);
+	return *((struct in_addr *)h->h_addr);
+}
+
+int get_socket_destinatario() {
+	int socket_destinatario;
+	if ((socket_destinatario = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror("socket");
+		exit(1);
+	}
+	return socket_destinatario;
+}
+
+void conectar(int socket, struct sockaddr_in direccion) {
+	if (connect(socket, (struct sockaddr *)&direccion, sizeof(struct sockaddr)) == -1) {
+		perror("connect");
+		exit(1);
+	}
+}
+
+struct sockaddr_in generar_direccion(struct in_addr ip, int puerto) {
+	struct sockaddr_in direccion;
+
+	direccion.sin_family = AF_INET;
+	direccion.sin_port = htons(puerto);
+	direccion.sin_addr = ip;
+	memset(&(direccion.sin_zero), '\0', 8);
+	return direccion;
+}
+
+char* recibir_datos(int servidor) {
+	char buffer[MAXIMO_TAMANO_DATOS];
+	int numero_bytes_recibidos;
+	if ((numero_bytes_recibidos=recv(servidor, buffer, MAXIMO_TAMANO_DATOS - 1, 0)) == -1) {
+		perror("recv");
+		exit(1);
+	}
+
+	if(numero_bytes_recibidos > 0) {
+		buffer[numero_bytes_recibidos] = '\0';
+		return buffer;
+	}
+	return NULL;
+}
+
+void enviar_datos(int destinatario, char* mensaje) {
+	if (send(destinatario, mensaje, strlen(mensaje), 0) == -1) {
+		error("send");
+	}
+}
+#endif /* FUNCIONESGENERALES_H_ */
