@@ -1,3 +1,6 @@
+RemoteSystemsTempFiles
+.metadata
+
 # Object files
 *.o
 *.ko
