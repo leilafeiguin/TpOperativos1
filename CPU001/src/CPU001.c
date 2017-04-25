@@ -8,22 +8,6 @@
 int main(void) {
 	struct sockaddr_in direccionServidor;
 
-	char ip[20];
-	char port[15];
-	int host;
-
-	FILE *archivoConfig;
-	archivoConfig= fopen("/home/utnso/workspace/tp-2017-1c-AsadoClash/CPU001/src/configCPU001", "r");
-	fgets(&ip, sizeof(ip)+1, archivoConfig);
-	fgets(&port, sizeof(port)+1, archivoConfig);
-
-
-	//printf(conf);
-	//printf(ip);
-	//printf(port);
-
-	fclose(archivoConfig);
-
 	direccionServidor.sin_family = AF_INET;
 	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
 	direccionServidor.sin_port = htons(8888);

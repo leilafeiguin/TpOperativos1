@@ -66,7 +66,7 @@ char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo
 	puts("Inicializando proceso File System\n");
 	fileSystem_configuracion configuracion;
 	// Obtiene el archivo de configuracion
-	char* path = "./config-fileSystem.cfg";
+	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/FileSystem/config-fileSystem.cfg";
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");

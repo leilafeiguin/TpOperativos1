@@ -1,4 +1,4 @@
-20:33:37 **** Incremental Build of configuration Debug for project Memory ****
+18:03:38 **** Incremental Build of configuration Debug for project Memory ****
 make all 
 Building file: ../src/Memory.c
 Invoking: GCC C Compiler
@@ -43,5 +43,5 @@ gcc  -o "Memory"  ./src/Memory.o   -lcommons
 Finished building target: Memory
  
 
-20:33:38 Build Finished (took 1s.330ms)
+18:03:39 Build Finished (took 867ms)
 

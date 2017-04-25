@@ -1,19 +1,16 @@
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <errno.h>
-#include <string.h>
 #include <netinet/in.h>
 #include <sys/wait.h>
 #include <signal.h>
 #include <commons/log.h>
 #include <commons/collections/list.h>
 #include <commons/config.h>
+#include <SocketLibrary.h>
+#include <ConfigLibrary.h>
+
 
 #define TRUE   1
 #define FALSE  0
@@ -36,8 +33,6 @@ typedef struct kernell_configuracion {
 	char** SHARED_VARS;
 } kernell_configuracion;
 
-
-int MAXIMO_TAMANO_DATOS = 100;
 
 char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo) {
 	char* valor;
@@ -74,7 +69,7 @@ kernell_configuracion get_configuracion() {
 	puts("Inicializando proceso Kernel\n");
 	kernell_configuracion configuracion;
 	// Obtiene el archivo de configuracion
-	char* path = "./config-kernell.cfg";
+	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Kernel/config-kernell.cfg";
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.PUERTO_PROG = get_campo_config_int(archivo_configuracion, "PUERTO_PROG");
@@ -91,7 +86,6 @@ kernell_configuracion get_configuracion() {
 	configuracion.SEM_INIT = get_campo_config_array(archivo_configuracion, "SEM_INIT");
 	configuracion.SHARED_VARS = get_campo_config_array(archivo_configuracion, "SHARED_VARS");
 	configuracion.STACK_SIZE = get_campo_config_int(archivo_configuracion, "STACK_SIZE");
-	printf("chau");
 	return configuracion;
 }
 

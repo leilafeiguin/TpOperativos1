@@ -1,18 +1,15 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <errno.h>
-#include <string.h>
 #include <netinet/in.h>
 #include <sys/wait.h>
 #include <signal.h>
 #include <commons/log.h>
 #include <commons/collections/list.h>
 #include <commons/config.h>
+#include <SocketLibrary.h>
+
 
 typedef struct console_configuracion {
 	char* IP_KERNEL;
@@ -56,7 +53,7 @@ console_configuracion get_configuracion() {
 	puts("Inicializando proceso Console\n");
 	console_configuracion configuracion;
 	// Obtiene el archivo de configuracion
-	char* path = "./config-console.cfg";
+	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Console001/config-console.cfg";
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.IP_KERNEL = get_campo_config_char(archivo_configuracion, "IP_KERNEL");

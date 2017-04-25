@@ -1,6 +1,44 @@
-20:39:28 **** Incremental Build of configuration Debug for project Console001 ****
+18:03:09 **** Incremental Build of configuration Debug for project Console001 ****
 make all 
-make: No se hace nada para «all».
+Building file: ../src/Console001.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/src" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Console001.d" -MT"src/Console001.d" -o "src/Console001.o" "../src/Console001.c"
+../src/Console001.c: In function ‘get_campo_config_char’:
+../src/Console001.c:26:3: warning: return makes integer from pointer without a cast [enabled by default]
+   return valor;
+   ^
+../src/Console001.c:28:2: warning: return makes integer from pointer without a cast [enabled by default]
+  return NULL;
+  ^
+../src/Console001.c: In function ‘get_campo_config_int’:
+../src/Console001.c:38:2: warning: return makes integer from pointer without a cast [enabled by default]
+  return NULL;
+  ^
+../src/Console001.c: In function ‘get_campo_config_array’:
+../src/Console001.c:45:3: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘char **’ [-Wformat=]
+   printf("El %s es: %s\n", nombre_campo, valor);
+   ^
+../src/Console001.c:46:3: warning: return makes integer from pointer without a cast [enabled by default]
+   return valor;
+   ^
+../src/Console001.c:48:2: warning: return makes integer from pointer without a cast [enabled by default]
+  return NULL;
+  ^
+../src/Console001.c: In function ‘get_configuracion’:
+../src/Console001.c:59:26: warning: assignment makes pointer from integer without a cast [enabled by default]
+  configuracion.IP_KERNEL = get_campo_config_char(archivo_configuracion, "IP_KERNEL");
+                          ^
+../src/Console001.c: In function ‘main’:
+../src/Console001.c:88:4: warning: format ‘%c’ expects argument of type ‘int’, but argument 2 has type ‘char *’ [-Wformat=]
+    printf("%c /n", mensaje);
+    ^
+Finished building: ../src/Console001.c
+ 
+Building target: Console001
+Invoking: GCC C Linker
+gcc  -o "Console001"  ./src/Console001.o   -lcommons
+Finished building target: Console001
+ 
 
-20:39:28 Build Finished (took 115ms)
+18:03:10 Build Finished (took 173ms)
 

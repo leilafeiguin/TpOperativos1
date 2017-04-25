@@ -69,7 +69,7 @@ memory_configuracion get_configuracion() {
 	puts("Inicializando proceso Memory\n");
 	memory_configuracion configuracion;
 	// Obtiene el archivo de configuracion
-	char* path = "./config-memory.cfg";
+	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Memory/config-memory.cfg";
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");
