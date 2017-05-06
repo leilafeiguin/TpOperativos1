@@ -25,11 +25,14 @@ endif
 # All Target
 all: Kernel
 
+dependents:
+	-cd /home/utnso/workspace/Libraries/Debug && $(MAKE) all
+
 # Tool invocations
-Kernel: $(OBJS) $(USER_OBJS)
+Kernel: $(OBJS) $(USER_OBJS) /home/utnso/workspace/Libraries/Debug/libLibraries.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc  -o "Kernel" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/workspace/Libraries/Debug" -o "Kernel" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -40,5 +43,6 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
+/home/utnso/workspace/Libraries/Debug/libLibraries.so:
 
 -include ../makefile.targets
