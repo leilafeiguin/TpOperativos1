@@ -101,10 +101,11 @@ t_paquete* recibir(un_socket socket_para_recibir) {
 	retorno = recv(socket_para_recibir, &paquete_recibido->codigo_operacion, sizeof(int),
 	MSG_WAITALL);
 
-	if(retorno==0){paquete_recibido->codigo_operacion=-1;
-	void * informacion_recibida = malloc(sizeof(int));
-	paquete_recibido->data = informacion_recibida;
-	return paquete_recibido;
+	if(retorno==0){
+		paquete_recibido->codigo_operacion=-1;
+		void * informacion_recibida = malloc(sizeof(int));
+		paquete_recibido->data = informacion_recibida;
+		return paquete_recibido;
 
 	}
 	recv(socket_para_recibir, &paquete_recibido->tamanio, sizeof(int),
@@ -206,6 +207,18 @@ int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo) {
 	}
 	return NULL;
 }
+
+
+char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo) {
+	char* valor;
+	if(config_has_property(archivo_configuracion, nombre_campo)){
+		valor = config_get_string_value(archivo_configuracion, nombre_campo);
+		printf("El %s es: %s\n", nombre_campo, valor);
+		return valor;
+	}
+	return NULL;
+}
+
 
 int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
 	char** valor;
