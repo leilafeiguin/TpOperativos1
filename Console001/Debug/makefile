@@ -26,13 +26,13 @@ endif
 all: Console001
 
 dependents:
-	-cd /home/utnso/workspace/Libraries/Debug && $(MAKE) all
+	-cd /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug && $(MAKE) all
 
 # Tool invocations
-Console001: $(OBJS) $(USER_OBJS) /home/utnso/workspace/Libraries/Debug/libLibraries.so
+Console001: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug/libLibraries.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/workspace/Libraries/Debug" -o "Console001" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug" -o "Console001" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -43,6 +43,6 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
-/home/utnso/workspace/Libraries/Debug/libLibraries.so:
+/home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug/libLibraries.so:
 
 -include ../makefile.targets

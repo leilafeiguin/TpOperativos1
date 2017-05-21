@@ -25,11 +25,14 @@ endif
 # All Target
 all: CPU001
 
+dependents:
+	-cd /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug && $(MAKE) all
+
 # Tool invocations
-CPU001: $(OBJS) $(USER_OBJS)
+CPU001: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug/libLibraries.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc  -o "CPU001" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug" -o "CPU001" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -40,5 +43,6 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
+/home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug/libLibraries.so:
 
 -include ../makefile.targets
