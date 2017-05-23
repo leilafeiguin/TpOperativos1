@@ -99,16 +99,15 @@ while(1){
 			if (i == socketServer) { //es una conexion nueva
 
 				newfd = aceptar_conexion(i);
+				//realizar_handshake(i);
 
-				//addrlen = sizeof remoteaddr;
-	            //newfd = accept(socketServer,(struct sockaddr *)&remoteaddr,&addrlen);
-	            //if (newfd == -1) {
-	            //	perror("accept");
+				//esperar_handshake(i);
 
 				FD_SET(newfd, &listaOriginal); //Agregar al master SET
 				if (newfd > fd_max) {    //Update el Maximo
 					fd_max = newfd;
 				}
+
 	            printf("Kernel recibio una nueva conexion\n");
 
 			} else {
@@ -127,11 +126,10 @@ while(1){
 			 	} else {
 				*/
 				// tenemos informacion del cliente
-				char* bufer1[1024];
-				bufer1[1024] = "";
-				recv(i, bufer1[1024], strlen(bufer1[1024]), 0); //usar recibir
-				printf("%c\n", bufer1); //porque no imprime correctamente
-				bufer1[1024] = "";
+				t_paquete* paquete;
+				paquete->data = "";
+				paquete = recibir(i);
+				//printf("%c\n",(char*)paquete->data);
 			}
 		}
 		listaAux = listaOriginal;

@@ -40,14 +40,16 @@ int main(void) {
 			perror("No se pudo conectar");
 			return 1;
 		}
+		//realizar_handshake(cliente);
+		//esperar_handshake(cliente);
+
 		//utilizar la funcion conectar_a, porque no tiene el bind?
 
 		while(1){
-			char buf[1024]; //utilizar un malloc y un free luego de enviado
-			buf[1024] = "";
-			scanf("%s",buf);
-			send(cliente, buf, strlen(buf), 0); //usar enviar
-			buf[1024] = "";
+			t_paquete* paquete;
+			paquete->data = "";
+			scanf("%c\n",(char*)paquete->data);//no anda
+			enviar(cliente,1,sizeof(paquete->data),paquete->data);
 		}
 
 /*
