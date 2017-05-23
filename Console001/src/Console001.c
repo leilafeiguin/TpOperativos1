@@ -40,10 +40,15 @@ int main(void) {
 			perror("No se pudo conectar");
 			return 1;
 		}
-		printf("conecte\n");
-		char* saludo = "Consola";
-		send(cliente, saludo, strlen(saludo)+1, 0);
-		sleep(1000000000);
+		//utilizar la funcion conectar_a, porque no tiene el bind?
+
+		while(1){
+			char buf[1024]; //utilizar un malloc y un free luego de enviado
+			buf[1024] = "";
+			scanf("%s",buf);
+			send(cliente, buf, strlen(buf), 0); //usar enviar
+			buf[1024] = "";
+		}
 
 /*
 		char *bienvenida = "hola soy [inserte nombre]";

@@ -62,7 +62,6 @@ int main(void){
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
 
-	char buf[256];    // buffer for client data
 	int nbytes;
 
 	char remoteIP[INET6_ADDRSTRLEN];
@@ -71,33 +70,7 @@ int main(void){
 	int i, j, rv;
 
 	struct addrinfo hints, *ai, *p;
-	/*
-	// get us a socket and bind it
-	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
-	if ((rv = getaddrinfo(NULL, PORT, &hints, &ai)) != 0) {
-		//fprintf(stderr, "selectserver: %s\n", gai_strerror(rv));
-		exit(1);
-	}
 
-	for(p = ai; p != NULL; p = p->ai_next) {
-		socketServer = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-	    if (socketServer < 0) {
-	    	continue;
-	    }
-
-// lose the pesky "address already in use" error message
-	setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-
-	if (bind(socketServer, p->ai_addr, p->ai_addrlen) < 0) {
-		close(socketServer);
-		continue;
-	}
-		break;
-	}
-*/
 	struct sockaddr_in direccionServidor;
 
 	direccionServidor.sin_family = AF_INET;
@@ -123,60 +96,55 @@ while(1){
 	select(fd_max + 1, &listaAux, NULL, NULL, NULL);
 	for(i = 0; i <= fd_max; i++) {
 		if (FD_ISSET(i, &listaAux)) {
-			if (i == socketServer) {
-				//manejamos conexiones nuevas
-				addrlen = sizeof remoteaddr;
-	            newfd = accept(socketServer,(struct sockaddr *)&remoteaddr,&addrlen);
-	            if (newfd == -1) {
-	            	perror("accept");
-	            } else {
-	                FD_SET(newfd, &listaOriginal); // add to master set
-	                if (newfd > fd_max) {    // keep track of the max
-	                	fd_max = newfd;
-	                }
+			if (i == socketServer) { //es una conexion nueva
+
+				newfd = aceptar_conexion(i);
+
+				//addrlen = sizeof remoteaddr;
+	            //newfd = accept(socketServer,(struct sockaddr *)&remoteaddr,&addrlen);
+	            //if (newfd == -1) {
+	            //	perror("accept");
+
+				FD_SET(newfd, &listaOriginal); //Agregar al master SET
+				if (newfd > fd_max) {    //Update el Maximo
+					fd_max = newfd;
+				}
 	            printf("Kernel recibio una nueva conexion\n");
-	                //printf("Kernel: nueva conexion de %s en ""socket %d\n", inet_ntop(remoteaddr.ss_family, get_in_addr((struct sockaddr*)&remoteaddr),remoteIP, INET6_ADDRSTRLEN),newfd);
-	            }
+
 			} else {
+				/*
 				// manejamos informacion recibida
 				if ((nbytes = recv(i, buf, 5, 0)) <= 0) {
 	            // got error or connection closed by client
-					if (nbytes == 0) {
-						// connection closed
-	                    printf("selectserver: socket %d hung up\n", i);
-	                } else {
-	                    perror("recv");
-	                }
-	                close(i); // bye!
-	                FD_CLR(i, &listaOriginal); // remove from master set
-	             } else {
-	            	 // we got some data from a client
-	                 printf("%s\n", (char*) buf);
-	            	 /*
-	            	 for(j = 0; j <= fd_max; j++) {
-	                	 // send to everyone!
-	                     if (FD_ISSET(j, &listaOriginal)) {
-	                    	 // except the listener and ourselves
-	                         if (j != socketServer && j != i) {
-	                        	 if (send(j, buf, nbytes, 0) == -1) {
-	                        		 perror("send");
-	                             }
-	                         }
-	                     }*/
-	                 }
+				if (nbytes == 0) {
+					// connection closed
+					printf("selectserver: socket %d hung up\n", i);
+				} else {
+					perror("recv");
+				}
+				close(i); // bye!
+				FD_CLR(i, &listaOriginal); // remove from master set
+			 	} else {
+				*/
+				// tenemos informacion del cliente
+				char* bufer1[1024];
+				bufer1[1024] = "";
+				recv(i, bufer1[1024], strlen(bufer1[1024]), 0); //usar recibir
+				printf("%c\n", bufer1); //porque no imprime correctamente
+				bufer1[1024] = "";
 			}
 		}
 		listaAux = listaOriginal;
-} // END got new incoming connection
-}
-	void *get_in_addr(struct sockaddr *sa)
-	{
-	    if (sa->sa_family == AF_INET) {
-	        return &(((struct sockaddr_in*)sa)->sin_addr);
-	    }
+	}// for
+}//while
 
-	    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-	}
+
+
+
+void *get_in_addr(struct sockaddr *sa){
+	if (sa->sa_family == AF_INET) {return &(((struct sockaddr_in*)sa)->sin_addr);}
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
 
 	return 0;
 }
