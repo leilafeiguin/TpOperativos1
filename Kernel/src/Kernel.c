@@ -47,9 +47,21 @@ kernell_configuracion get_configuracion() {
 	return configuracion;
 }
 
+typedef struct proceso_consola{
+	bool habilitado;
+	int socket;
+	void* siguiente;
+}proceso_consola;
+//replicar para el resto
+typedef struct procesos{
+	proceso_consola* consolas;
+
+}procesos;
 
 int main(void){
 	kernell_configuracion configuracion = get_configuracion();
+
+	procesos procesos;
 
 	fd_set listaOriginal;
 	fd_set listaAux;
@@ -57,20 +69,16 @@ int main(void){
 	FD_ZERO(&listaAux);
 
 	int fd_max = 1;
-
 	int newfd;        // newly accept()ed socket descriptor
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
 
 	int nbytes;
-
 	char remoteIP[INET6_ADDRSTRLEN];
-
 	int yes=1;        // for setsockopt() SO_REUSEADDR, below
-	int i, j, rv;
+	int socketActual, j, rv;
 
 	struct addrinfo hints, *ai, *p;
-
 	struct sockaddr_in direccionServidor;
 
 	direccionServidor.sin_family = AF_INET;
@@ -90,46 +98,41 @@ int main(void){
 	FD_SET(socketServer,&listaOriginal);
 	fd_max=socketServer;
 
-
 while(1){
 	listaAux = listaOriginal;
 	select(fd_max + 1, &listaAux, NULL, NULL, NULL);
-	for(i = 0; i <= fd_max; i++) {
-		if (FD_ISSET(i, &listaAux)) {
-			if (i == socketServer) { //es una conexion nueva
-
-				newfd = aceptar_conexion(i);
-				realizar_handshake(i);
-
-				//esperar_handshake(i);
-
+	for(socketActual = 0; socketActual <= fd_max; socketActual++) {
+		if (FD_ISSET(socketActual, &listaAux)) {
+			if (socketActual == socketServer) { //es una conexion nueva
+				newfd = aceptar_conexion(socketActual);
 				FD_SET(newfd, &listaOriginal); //Agregar al master SET
 				if (newfd > fd_max) {    //Update el Maximo
 					fd_max = newfd;
 				}
-
 	            printf("Kernel recibio una nueva conexion\n");
 
 			} else {
-				/*
-				// manejamos informacion recibida
-				if ((nbytes = recv(i, buf, 5, 0)) <= 0) {
-	            // got error or connection closed by client
-				if (nbytes == 0) {
-					// connection closed
-					printf("selectserver: socket %d hung up\n", i);
-				} else {
-					perror("recv");
+				t_paquete* paqueteRecibido = recibir(socketActual);
+				switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
+					case cop_handshake_consola:
+						esperar_handshake(socketActual, paqueteRecibido);
+						proceso_consola* nuevo_nodo = malloc(sizeof(proceso_consola));
+						proceso_consola* auxiliar;
+						proceso_consola* ultimo_nodo;
+						auxiliar = procesos.consolas;
+						while(auxiliar != NULL){
+							ultimo_nodo = auxiliar;
+							auxiliar = (proceso_consola*)auxiliar->siguiente;
+						}
+						if(ultimo_nodo == NULL){
+							procesos.consolas = nuevo_nodo;
+						}else{
+							ultimo_nodo->siguiente = nuevo_nodo;
+						}
+						nuevo_nodo->habilitado = true;
+						nuevo_nodo->socket = socketActual;
+				    break;
 				}
-				close(i); // bye!
-				FD_CLR(i, &listaOriginal); // remove from master set
-			 	} else {
-				*/
-				// tenemos informacion del cliente
-				t_paquete* paquete;
-				paquete->data = "";
-				paquete = recibir(i);
-				//printf("%c\n",(char*)paquete->data);
 			}
 		}
 		listaAux = listaOriginal;

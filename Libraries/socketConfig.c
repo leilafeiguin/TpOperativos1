@@ -140,7 +140,7 @@ void liberar_paquete(t_paquete * paquete) {
 	free(paquete);
 }
 
-bool realizar_handshake(un_socket socket_del_servidor) {
+bool realizar_handshake(un_socket socket_del_servidor, int cop_handshake) {
 
 	char * mensaje = malloc(18);
 	mensaje = "Inicio autenticacion";
@@ -158,26 +158,24 @@ bool realizar_handshake(un_socket socket_del_servidor) {
 
 }
 
-bool esperar_handshake(un_socket socket_del_cliente) {
-
-	t_paquete * inicio_del_handhsake = recibir(socket_del_cliente);
+bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_handshake) {
 
 	bool resultado = string_equals_ignore_case(
-			(char *) inicio_del_handhsake->data, "Inicio autenticacion");
+			(char *) inicio_del_handshake->data, "Inicio autenticacion");
 
-	liberar_paquete(inicio_del_handhsake);
+	liberar_paquete(inicio_del_handshake);
 
 	if (resultado) {
 
 		char * respuesta = malloc(12);
 		respuesta = "Autenticado";
-		enviar(socket_del_cliente, cop_handshake, 12, respuesta);
+		enviar(socket_del_cliente, cop_handshake_kernel, 12, respuesta);
 
 	} else {
 
 		char * respuesta = malloc(6);
 		respuesta = "Error";
-		enviar(socket_del_cliente, cop_handshake, 6, respuesta);
+		enviar(socket_del_cliente, cop_handshake_kernel, 6, respuesta);
 
 	}
 

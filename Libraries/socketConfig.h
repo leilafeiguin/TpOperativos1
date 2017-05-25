@@ -20,7 +20,12 @@
 #include <commons/error.h>
 #include <commons/config.h>
 
-const int cop_handshake = 1;
+
+#define cop_handshake_consola 1
+#define cop_handshake_cpu 2
+#define cop_handshake_memoria 3
+#define cop_handshake_fileSystem 4
+#define cop_handshake_kernel 5
 
 typedef int un_socket;
 typedef struct {
@@ -74,12 +79,12 @@ void liberar_paquete(t_paquete * paquete);
 /**	@NAME: realizar_handshake
  *
  */
-bool realizar_handshake(un_socket socket_del_servidor);
+bool realizar_handshake(un_socket socket_del_servidor, int cop_handshake);
 
 /**	@NAME: esperar_handshake
  *
  */
-bool esperar_handshake(un_socket socket_del_cliente);
+bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_handshake);
 
 char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo);
 
