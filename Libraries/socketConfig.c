@@ -145,7 +145,7 @@ bool realizar_handshake(un_socket socket_del_servidor) {
 	char * mensaje = malloc(18);
 	mensaje = "Inicio autenticacion";
 
-	enviar(socket_del_servidor, 1, 21, mensaje);
+	enviar(socket_del_servidor, cop_handshake, 21, mensaje);
 
 	t_paquete * resultado_del_handhsake = recibir(socket_del_servidor);
 
@@ -171,13 +171,13 @@ bool esperar_handshake(un_socket socket_del_cliente) {
 
 		char * respuesta = malloc(12);
 		respuesta = "Autenticado";
-		enviar(socket_del_cliente, 1, 12, respuesta);
+		enviar(socket_del_cliente, cop_handshake, 12, respuesta);
 
 	} else {
 
 		char * respuesta = malloc(6);
 		respuesta = "Error";
-		enviar(socket_del_cliente, 1, 6, respuesta);
+		enviar(socket_del_cliente, cop_handshake, 6, respuesta);
 
 	}
 
@@ -209,7 +209,7 @@ int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo) {
 }
 
 
-char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo) {
+char* get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo) {
 	char* valor;
 	if(config_has_property(archivo_configuracion, nombre_campo)){
 		valor = config_get_string_value(archivo_configuracion, nombre_campo);
@@ -220,7 +220,7 @@ char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo
 }
 
 
-int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
+char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
 	char** valor;
 	if(config_has_property(archivo_configuracion, nombre_campo)){
 		valor = config_get_array_value(archivo_configuracion, nombre_campo);

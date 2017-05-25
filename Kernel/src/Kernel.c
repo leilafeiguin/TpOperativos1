@@ -99,7 +99,7 @@ while(1){
 			if (i == socketServer) { //es una conexion nueva
 
 				newfd = aceptar_conexion(i);
-				//realizar_handshake(i);
+				realizar_handshake(i);
 
 				//esperar_handshake(i);
 

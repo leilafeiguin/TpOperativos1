@@ -20,6 +20,7 @@
 #include <commons/error.h>
 #include <commons/config.h>
 
+const int cop_handshake = 1;
 
 typedef int un_socket;
 typedef struct {
@@ -84,9 +85,9 @@ char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo);
 
 int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo);
 
-int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo);
+char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo);
 
-char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo);
+char* get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo);
 
 
 #endif /* SOCKETCONFIG_H_ */
