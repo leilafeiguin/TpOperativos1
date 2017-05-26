@@ -10,12 +10,26 @@ typedef struct console_configuracion {
 signed int kernel;
 console_configuracion configuracion;
 
-#define iniciarPrograma 1
-#define finalizarPrograma 2
-#define desconectarConsola 3
-#define limpiarConsola 4
+enum instrucciones{
+	iniciarPrograma = 1,
+	finalizarPrograma = 2,
+	desconectarConsola = 3,
+	limpiarConsola = 4
+};
 
-void programa();
+typedef struct t_programa{
+	int processID;
+	int threadID;
+	void* siguiente;
+}t_programa;
+
+typedef struct programas{
+	t_programa* programa;
+}programas;
+
+programas programasActuales;
+
+void hiloPrograma(char* path);
 
 console_configuracion get_configuracion() {
 	puts("Inicializando proceso Console\n");
@@ -26,7 +40,6 @@ console_configuracion get_configuracion() {
 
 	configuracion.IP_KERNEL = get_campo_config_string(archivo_configuracion, "IP_KERNEL");
 	configuracion.PUERTO_KERNEL = get_campo_config_string(archivo_configuracion, "PUERTO_KERNEL");
-	//configuracion.PUERTO_INTERFAZ = get_campo_config_string(archivo_configuracion, "PUERTO_INTERFAZ");
 	return configuracion;
 }
 
@@ -40,12 +53,18 @@ int main(void) {
 		scanf("%i\n",seleccion);
 		switch(seleccion){
 			case iniciarPrograma:
-				//pthread_create();
-				//un_socket programa = conectar_a("127.0.0.1", configuracion.PUERTO_INTERFAZ);
+				printf("Ingrese el path del archivo a ejecutar:");
+				char* path; //hace falta malloc?
+				scanf("%s\n",path);
+				if(comprobar_archivo(path)){
+					//como logro que identifique a cada hilo de forma distinta
+					//pthread_create();
+				}
 				break;
 			case finalizarPrograma:
 				break;
 			case desconectarConsola:
+				//finalizar todos los hilos
 				break;
 			case limpiarConsola:
 				break;
@@ -56,33 +75,43 @@ int main(void) {
 	return 0;
 }
 
-void programa(){
-	struct sockaddr_in direccionServidor;
-
-	direccionServidor.sin_family = AF_INET;
-	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
-	//direccionServidor.sin_port = htons(configuracion.PUERTO_INTERFAZ); //agregar al archivo config
-
-	int fd_max = 1;
-	int yes=1;
-
-	un_socket socketServer = socket(AF_INET, SOCK_STREAM, 0);
-	setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-	int error=0;
-	error=bind(socketServer, (struct sockaddr *) &direccionServidor, sizeof(direccionServidor));
-	if(error <0){perror('error en bind');}
-	error=listen(socketServer, 256);
-	if(error <0){perror('error en listen');}
-
-	fd_set listaOriginal;
-	FD_ZERO(&listaOriginal);
-	FD_SET(socketServer,&listaOriginal);
-	fd_max=socketServer;
-
+void hiloPrograma(char* path){
 	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO_KERNEL);
 	realizar_handshake(kernel, cop_handshake_consola);
+	enviar_archivo(kernel, path);
 
-	//select();
+	t_paquete* pid = recibir(kernel);
+	t_programa* nuevo_nodo = malloc(sizeof(t_programa));
+	t_programa* auxiliar;
+	t_programa* ultimo_nodo;
+
+	auxiliar = programasActuales.programa;
+	while(auxiliar != NULL){
+		ultimo_nodo = auxiliar;
+		auxiliar = (t_programa*)auxiliar->siguiente;
+	}
+	if(ultimo_nodo == NULL){
+		programasActuales.programa = nuevo_nodo;
+	}else{
+		ultimo_nodo->siguiente = nuevo_nodo;
+	}
+	nuevo_nodo->processID = (int)pid->data;
+	nuevo_nodo->threadID = (int)pthread_self();
+
+	while(1){
+		t_paquete* paqueteRecibido = recibir(kernel);
+		switch(paqueteRecibido->codigo_operacion){
+			case cop_imprimi:
+				printf("%s\n",(char*)paqueteRecibido->data);
+				break;
+			case cop_terminar_proceso:
+				//proceso que implica limpiarse de la lista de programas
+				//instruccion para terminarse a el mismo? esto liberaria el paquete en el proceso?
+				break;
+		}
+		liberar_paquete(paqueteRecibido);
+	}
+
 
 }
 

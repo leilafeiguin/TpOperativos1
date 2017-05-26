@@ -182,10 +182,6 @@ bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_hands
 	return resultado;
 }
 
-
-int MAXIMO_TAMANO_DATOS = 100;
-
-
 char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo) {
 	char* valor;
 	if(config_has_property(archivo_configuracion, nombre_campo)){
@@ -227,3 +223,27 @@ char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_camp
 	}
 	return NULL;
 }
+
+void enviar_archivo(un_socket socket, char* path){
+	FILE *fp = fopen (path, "r");
+	fseek(fp, 0, SEEK_END);
+	int tamanioArchivo = sizeof(char*) * ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	char* archivo = malloc(tamanioArchivo+1);
+	fread(archivo, tamanioArchivo, 1, fp);
+	enviar(socket, cop_archivo_programa, tamanioArchivo+1, archivo);
+	fclose (fp);
+	free(archivo);
+}
+
+bool comprobar_archivo(char* path){
+	bool retorno;
+	if(access(path, R_OK) == 1){
+		printf("Archivo Validado");
+		retorno = true;
+	}else{
+		printf("No se pudo leer/encontrar el archivo"); //hace falta imprimir un codigo de error y una descrip?
+	}
+	return retorno;
+}
+

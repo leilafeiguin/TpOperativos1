@@ -13,19 +13,29 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <string.h>
 #include <commons/string.h>
 #include <commons/error.h>
 #include <commons/config.h>
+#include <unistd.h>
 
+int MAXIMO_TAMANO_DATOS = 100;
 
-#define cop_handshake_consola 1
-#define cop_handshake_cpu 2
-#define cop_handshake_memoria 3
-#define cop_handshake_fileSystem 4
-#define cop_handshake_kernel 5
+enum codigos_de_operacion{
+	cop_generico = 0,
+	cop_handshake_consola = 1,
+	cop_handshake_cpu = 2,
+	cop_handshake_memoria =3,
+	cop_handshake_fileSystem = 4,
+	cop_handshake_kernel = 5,
+	cop_archivo_programa = 6,
+	cop_imprimi = 7,
+	cop_terminar_proceso = 8,
+	//cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
+};
 
 typedef int un_socket;
 typedef struct {
@@ -93,6 +103,13 @@ int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo);
 char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo);
 
 char* get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo);
+
+/**	@NAME: enviar_archivo
+ *
+ */
+void enviar_archivo(un_socket socket, char* path);
+
+bool comprobar_archivo(char* path);
 
 
 #endif /* SOCKETCONFIG_H_ */
