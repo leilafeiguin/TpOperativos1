@@ -2,10 +2,23 @@
 #include <socketConfig.h>
 #include <pthread.h>
 
+//ESTRUCTURA ARCHIVO CONFIGURACION
 typedef struct console_configuracion {
 	char* IP_KERNEL;
 	char* PUERTO_KERNEL;
 } console_configuracion;
+
+console_configuracion get_configuracion() {
+	puts("Inicializando proceso Console\n");
+	console_configuracion configuracion;
+	// Obtiene el archivo de configuracion
+	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Console001/config-console.cfg";
+	t_config* archivo_configuracion = config_create(path);
+
+	configuracion.IP_KERNEL = get_campo_config_string(archivo_configuracion, "IP_KERNEL");
+	configuracion.PUERTO_KERNEL = get_campo_config_string(archivo_configuracion, "PUERTO_KERNEL");
+	return configuracion;
+}
 
 signed int kernel;
 console_configuracion configuracion;
@@ -30,19 +43,6 @@ typedef struct programas{
 programas programasActuales;
 
 void hiloPrograma(char* path);
-
-console_configuracion get_configuracion() {
-	puts("Inicializando proceso Console\n");
-	console_configuracion configuracion;
-	// Obtiene el archivo de configuracion
-	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Console001/config-console.cfg";
-	t_config* archivo_configuracion = config_create(path);
-
-	configuracion.IP_KERNEL = get_campo_config_string(archivo_configuracion, "IP_KERNEL");
-	configuracion.PUERTO_KERNEL = get_campo_config_string(archivo_configuracion, "PUERTO_KERNEL");
-	return configuracion;
-}
-
 
 
 int main(void) {
@@ -83,6 +83,7 @@ int main(void) {
 	return 0;
 }
 
+//-------------------------HILO PROGRAMA--------------------------------------
 void hiloPrograma(char* path){
 	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO_KERNEL);
 	realizar_handshake(kernel, cop_handshake_consola);

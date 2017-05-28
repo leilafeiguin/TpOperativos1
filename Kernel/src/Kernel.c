@@ -6,6 +6,7 @@
 #define FALSE  0
 #define PORT 8888
 
+//ESTRUCTURA ARCHIVO CONFIGURACION
 typedef struct kernell_configuracion {
 	int PUERTO_PROG;
 	int PUERTO_CPU;
@@ -30,7 +31,6 @@ kernell_configuracion get_configuracion() {
 	// Obtiene el archivo de configuracion
 	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Kernel/config-kernell.cfg";
 	t_config* archivo_configuracion = config_create(path);
-
 	configuracion.PUERTO_PROG = get_campo_config_int(archivo_configuracion, "PUERTO_PROG");
 	configuracion.PUERTO_CPU = get_campo_config_int(archivo_configuracion, "PUERTO_CPU");
 	configuracion.IP_MEMORIA = get_campo_config_char(archivo_configuracion, "IP_MEMORIA");
@@ -48,17 +48,53 @@ kernell_configuracion get_configuracion() {
 	return configuracion;
 }
 
+//ESTRUCTURAS PROCESOS
 typedef struct proceso_consola{
 	bool habilitado;
 	int socket;
 	void* siguiente;
 }proceso_consola;
 
+<<<<<<< HEAD
 //replicar para el resto
 
 typedef struct procesos{
 	proceso_consola* consolas;
+=======
+typedef struct proceso_cpu{
+	bool habilitado;
+	int socket;
+	void* siguiente;
+}proceso_cpu;
+
+typedef struct proceso_memoria{
+	bool habilitado;
+	int socket;
+	void* siguiente;
+}proceso_memoria;
+
+typedef struct proceso_fileSystem{
+	bool habilitado;
+	int socket;
+	void* siguiente;
+}proceso_fileSystem;
+
+
+typedef struct procesos{
+	proceso_consola* consolas;
+	proceso_cpu* cpus;
+	proceso_memoria* memorias;
+	proceso_fileSystem* fileSystems;
+>>>>>>> 089fd510a71c12d5b4388c14ff1736453315daaf
 }procesos;
+
+typedef struct pcb{
+	int PID;// Identificador del proceso
+	int PC;// Program Counter
+	// Referencia a la tabla de Archivos del Proceso
+	int SP;// Posicion del Stack
+	int EC;// Exit Code
+}pcb;
 
 int main(void){
 	kernell_configuracion configuracion = get_configuracion();
@@ -118,23 +154,58 @@ while(1){
 				switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
 					case cop_handshake_consola:
 						esperar_handshake(socketActual, paqueteRecibido);
-						proceso_consola* nuevo_nodo = malloc(sizeof(proceso_consola));
-						proceso_consola* auxiliar;
-						proceso_consola* ultimo_nodo;
-						auxiliar = procesos.consolas;
-						while(auxiliar != NULL){
-							ultimo_nodo = auxiliar;
-							auxiliar = (proceso_consola*)auxiliar->siguiente;
+						proceso_consola* nuevo_nodo_consola = malloc(sizeof(proceso_consola));
+						proceso_consola* auxiliar_consola;
+						proceso_consola* ultimo_nodo_consola;
+						auxiliar_consola = procesos.consolas;
+						while(auxiliar_consola != NULL){
+							ultimo_nodo_consola = auxiliar_consola;
+							auxiliar_consola = (proceso_consola*)auxiliar_consola->siguiente;
 						}
-						if(ultimo_nodo == NULL){
-							procesos.consolas = nuevo_nodo;
+						if(ultimo_nodo_consola == NULL){
+							procesos.consolas = nuevo_nodo_consola;
 						}else{
-							ultimo_nodo->siguiente = nuevo_nodo;
+							ultimo_nodo_consola->siguiente = nuevo_nodo_consola;
 						}
-						nuevo_nodo->habilitado = true;
-						nuevo_nodo->socket = socketActual;
+						nuevo_nodo_consola->habilitado = true;
+						nuevo_nodo_consola->socket = socketActual;
 				    break;
 
+<<<<<<< HEAD
+=======
+					case cop_handshake_cpu:
+						esperar_handshake(socketActual, paqueteRecibido);
+						proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
+						proceso_cpu* auxiliar_cpu;
+						proceso_cpu* ultimo_nodo_cpu;
+						auxiliar_cpu = procesos.cpus;
+						while(auxiliar_cpu != NULL){
+							ultimo_nodo_cpu = auxiliar_cpu;
+							auxiliar_cpu = (proceso_cpu*)auxiliar_cpu->siguiente;
+						}
+						if(ultimo_nodo_cpu == NULL){
+							procesos.cpus = nuevo_nodo_cpu;
+						}else{
+							ultimo_nodo_cpu->siguiente = nuevo_nodo_cpu;
+						}
+						nuevo_nodo_cpu->habilitado = true;
+						nuevo_nodo_cpu->socket = socketActual;
+					break;
+
+					case cop_handshake_memoria://no se si no le falta algo
+						esperar_handshake(socketActual, paqueteRecibido);
+						proceso_memoria* nuevo_nodo_memoria = malloc(sizeof(proceso_memoria));
+						nuevo_nodo_memoria->habilitado = true;
+						nuevo_nodo_memoria->socket = socketActual;
+					break;
+
+					case cop_handshake_fileSystem://no se si no le falta algo
+						esperar_handshake(socketActual, paqueteRecibido);
+						proceso_fileSystem* nuevo_nodo_fileSystem = malloc(sizeof(proceso_fileSystem));
+						nuevo_nodo_fileSystem->habilitado = true;
+						nuevo_nodo_fileSystem->socket = socketActual;
+					break;
+>>>>>>> 089fd510a71c12d5b4388c14ff1736453315daaf
 				}
 			}
 		}
