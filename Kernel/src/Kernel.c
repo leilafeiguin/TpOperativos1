@@ -55,12 +55,7 @@ typedef struct proceso_consola{
 	void* siguiente;
 }proceso_consola;
 
-<<<<<<< HEAD
-//replicar para el resto
 
-typedef struct procesos{
-	proceso_consola* consolas;
-=======
 typedef struct proceso_cpu{
 	bool habilitado;
 	int socket;
@@ -85,7 +80,6 @@ typedef struct procesos{
 	proceso_cpu* cpus;
 	proceso_memoria* memorias;
 	proceso_fileSystem* fileSystems;
->>>>>>> 089fd510a71c12d5b4388c14ff1736453315daaf
 }procesos;
 
 typedef struct pcb{
@@ -170,9 +164,6 @@ while(1){
 						nuevo_nodo_consola->habilitado = true;
 						nuevo_nodo_consola->socket = socketActual;
 				    break;
-
-<<<<<<< HEAD
-=======
 					case cop_handshake_cpu:
 						esperar_handshake(socketActual, paqueteRecibido);
 						proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
@@ -205,7 +196,7 @@ while(1){
 						nuevo_nodo_fileSystem->habilitado = true;
 						nuevo_nodo_fileSystem->socket = socketActual;
 					break;
->>>>>>> 089fd510a71c12d5b4388c14ff1736453315daaf
+
 				}
 			}
 		}

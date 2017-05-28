@@ -4,10 +4,10 @@
 
 typedef struct fileSystem_configuracion {
 	int PUERTO;
+	char* IP_KERNEL;
 	char* PUNTO_MONTAJE;
 } fileSystem_configuracion;
 
-int MAXIMO_TAMANO_DATOS = 100;
 
 	fileSystem_configuracion get_configuracion() {
 	puts("Inicializando proceso File System\n");
@@ -17,6 +17,7 @@ int MAXIMO_TAMANO_DATOS = 100;
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");
+	configuracion.IP_KERNEL = get_campo_config_int(archivo_configuracion, "IP_KERNEL");
 	configuracion.PUNTO_MONTAJE = get_campo_config_string(archivo_configuracion, "PUNTO_MONTAJE");
 	return configuracion;
 }
@@ -25,23 +26,8 @@ int MAXIMO_TAMANO_DATOS = 100;
 int main(void) {
 	fileSystem_configuracion configuracion = get_configuracion();
 
-	struct sockaddr_in direccionServidor;
-
-	direccionServidor.sin_family = AF_INET;
-	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
-	direccionServidor.sin_port = htons(configuracion.PUERTO);
-
-
-	un_socket cliente = socket(AF_INET, SOCK_STREAM, 0);
-	bind(cliente, (struct sockaddr *)&direccionServidor, sizeof direccionServidor);
-	if (connect(cliente, (void*) &direccionServidor, sizeof(direccionServidor)) != 0) {
-		perror("No se pudo conectar");
-		return 1;
-	}
-	printf("conecte\n");
-	char* saludo = "Consola";
-	send(cliente, saludo, strlen(saludo)+1, 0);
-	sleep(1000000000);
+	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO);
+	realizar_handshake(kernel, cop_handshake_fileSystem);
 
 	return 0;
 }

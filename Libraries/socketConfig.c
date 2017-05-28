@@ -247,3 +247,6 @@ bool comprobar_archivo(char* path){
 	return retorno;
 }
 
+bool matar_Conexion(int pid){
+
+}

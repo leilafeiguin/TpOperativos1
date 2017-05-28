@@ -34,6 +34,7 @@ enum codigos_de_operacion{
 	cop_archivo_programa = 6,
 	cop_imprimi = 7,
 	cop_terminar_proceso = 8,
+	cop_handshake_consolaInterfazUsuario = 9
 	//cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
 };
 

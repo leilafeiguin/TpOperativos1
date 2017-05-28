@@ -46,35 +46,59 @@ void hiloPrograma(char* path);
 
 
 int main(void) {
+	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO_KERNEL);
+	realizar_handshake(kernel, cop_handshake_consolaInterfazUsuario);
+
+
 	configuracion = get_configuracion();
 	while(1){
 		printf("Ingrese la opcion deseada:\n1) Iniciar Programa\n2) Finalizar Programa\n3) Desconectar Consola\n4) Limpiar Mensajes\n");
 		int seleccion;
 		scanf("%i\n",seleccion);
 		switch(seleccion){
-			case iniciarPrograma:
+			case iniciarPrograma: {
 				printf("Ingrese el path del archivo a ejecutar:");
-				char* path; //hace falta malloc?
+				char* path= malloc(255); //hace falta malloc?
 				scanf("%s\n",path);
 				if(comprobar_archivo(path)){
+					pthread_t hilo;
+					pthread_create(&hilo, NULL,hiloPrograma,(void*)path);
 					//como logro que identifique a cada hilo de forma distinta
 					//pthread_create();
 				}
+			}
 				break;
 			case finalizarPrograma:
-				printf("Ingrese el path del archivo a ejecutar:");
-				char* path;
-				scanf("%s\n",path);
-				if(comprobar_archivo(path)){
-					//exit();
+				printf("Ingrese el pid del archivo a finalizar:");
+				int pid;
+				scanf("%s\n",pid);
+				programas* auxiliarAnterior = programasActuales.programa;
+				int posicion = 0;
+				while(programasActuales.programa->processID != pid){
+					auxiliarAnterior = programasActuales.programa;
+					programasActuales.programa = programasActuales.programa->siguiente;
 				}
+				if(programasActuales.programa->siguiente == NULL) {
+					matar_Conexion(programasActuales.programa->processID);
+				}
+				else{
+					programas* auxiliarSiguiente = programasActuales.programa->siguiente;
+					auxiliarAnterior->programa->siguiente = auxiliarSiguiente;
+					matar_Conexion(programasActuales.programa->processID);
+				}
+				free(programasActuales.programa);
 				break;
 			case desconectarConsola:
-				pthread_exit();
 				//finalizar todos los hilos
+				while(programasActuales.programa != NULL){
+					matar_Conexion(programasActuales.programa->processID);
+					programas* auxiliar = programasActuales.programa;
+					programasActuales.programa= programasActuales.programa->siguiente;
+					free(auxiliar);
+				}
 				break;
 			case limpiarConsola:
-				System("clear");
+				//System("clear");
 				break;
 		}
 	}
