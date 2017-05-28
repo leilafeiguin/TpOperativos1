@@ -23,6 +23,7 @@ typedef struct kernell_configuracion {
 	char** SHARED_VARS;
 } kernell_configuracion;
 
+
 kernell_configuracion get_configuracion() {
 	printf("Inicializando proceso Kernel\n");
 	kernell_configuracion configuracion;
@@ -52,10 +53,11 @@ typedef struct proceso_consola{
 	int socket;
 	void* siguiente;
 }proceso_consola;
+
 //replicar para el resto
+
 typedef struct procesos{
 	proceso_consola* consolas;
-
 }procesos;
 
 int main(void){
@@ -132,6 +134,7 @@ while(1){
 						nuevo_nodo->habilitado = true;
 						nuevo_nodo->socket = socketActual;
 				    break;
+
 				}
 			}
 		}
@@ -146,6 +149,7 @@ void *get_in_addr(struct sockaddr *sa){
 	if (sa->sa_family == AF_INET) {return &(((struct sockaddr_in*)sa)->sin_addr);}
 	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
+
 
 	return 0;
 }
