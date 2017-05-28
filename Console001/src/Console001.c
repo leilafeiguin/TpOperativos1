@@ -69,37 +69,22 @@ int main(void) {
 			}
 				break;
 			case finalizarPrograma:
-
 				printf("Ingrese el pid del archivo a finalizar:");
 				int pid;
 				scanf("%s\n",pid);
-				programas* auxiliarAnterior = programasActuales.programa;
-				int posicion = 0;
-				while(programasActuales.programa->processID != pid){
-					auxiliarAnterior = programasActuales.programa;
-					programasActuales.programa = programasActuales.programa->siguiente;
-				}
-				if(programasActuales.programa->siguiente == NULL) {
-					matar_Conexion(programasActuales.programa->processID);				}
-				else{
-					programas* auxiliarSiguiente = programasActuales.programa->siguiente;
-					auxiliarAnterior->programa->siguiente = auxiliarSiguiente;
-					matar_Conexion(programasActuales.programa->processID);
-				}
-				free(programasActuales.programa);
+				enviar(kernel, 8, sizeof(pid), pid);
 				break;
-			case desconectarConsola:
 
+			case desconectarConsola:
 				//finalizar todos los hilos
 				while(programasActuales.programa != NULL){
-					matar_Conexion(programasActuales.programa->processID);
-					programas* auxiliar = programasActuales.programa;
+					enviar(kernel, 8, sizeof(pid), pid);
+					pthread_join(programasActuales.programa->threadID,NULL);
 					programasActuales.programa= programasActuales.programa->siguiente;
-					free(auxiliar);
 				}
 				break;
 			case limpiarConsola:
-				//System("clear");
+				system("clear");
 				break;
 		}
 	}
@@ -138,9 +123,17 @@ void hiloPrograma(char* path){
 			case cop_imprimi:
 				printf("%s\n",(char*)paqueteRecibido->data);
 				break;
-			case cop_terminar_proceso:
-				//proceso que implica limpiarse de la lista de programas
-				//instruccion para terminarse a el mismo? esto liberaria el paquete en el proceso?
+			case cop_terminar_proceso:{
+				programas* auxiliarAnterior = programasActuales.programa;
+				int posicion = 0;
+				while(programasActuales.programa->processID != pid){
+					auxiliarAnterior = programasActuales.programa;
+					programasActuales.programa = programasActuales.programa->siguiente;
+				}
+				free(programasActuales.programa);
+				liberar_paquete(paqueteRecibido);
+				return;
+			}
 				break;
 		}
 		liberar_paquete(paqueteRecibido);

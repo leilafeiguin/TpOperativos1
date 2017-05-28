@@ -4,7 +4,6 @@
 
 typedef struct fileSystem_configuracion {
 	int PUERTO;
-	char* IP_KERNEL;
 	char* PUNTO_MONTAJE;
 } fileSystem_configuracion;
 
@@ -17,7 +16,6 @@ typedef struct fileSystem_configuracion {
 	t_config* archivo_configuracion = config_create(path);
 
 	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");
-	configuracion.IP_KERNEL = get_campo_config_int(archivo_configuracion, "IP_KERNEL");
 	configuracion.PUNTO_MONTAJE = get_campo_config_string(archivo_configuracion, "PUNTO_MONTAJE");
 	return configuracion;
 }
@@ -26,8 +24,10 @@ typedef struct fileSystem_configuracion {
 int main(void) {
 	fileSystem_configuracion configuracion = get_configuracion();
 
-	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO);
-	realizar_handshake(kernel, cop_handshake_fileSystem);
-
+	un_socket kernel = socket_escucha("127.0.0.1", configuracion.PUERTO);
+	aceptar_conexion(kernel);
+	t_paquete* handshake = recibir(kernel);
+	esperar_handshake(kernel, handshake,cop_handshake_fileSystem);
+	free(handshake);
 	return 0;
 }

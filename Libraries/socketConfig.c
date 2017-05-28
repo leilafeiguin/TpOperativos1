@@ -227,7 +227,7 @@ char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_camp
 void enviar_archivo(un_socket socket, char* path){
 	FILE *fp = fopen (path, "r");
 	fseek(fp, 0, SEEK_END);
-	int tamanioArchivo = sizeof(char*) * ftell(fp);
+	int tamanioArchivo = sizeof(char) * ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	char* archivo = malloc(tamanioArchivo+1);
 	fread(archivo, tamanioArchivo, 1, fp);
@@ -247,6 +247,3 @@ bool comprobar_archivo(char* path){
 	return retorno;
 }
 
-bool matar_Conexion(int pid){
-
-}
