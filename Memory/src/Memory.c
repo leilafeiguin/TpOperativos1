@@ -13,6 +13,10 @@
 #include <commons/log.h>
 #include <commons/collections/list.h>
 #include <commons/config.h>
+#include <socketConfig.h>
+
+#define TRUE   1
+#define FALSE  0
 
 typedef struct memory_configuracion {
 	int PUERTO;
@@ -23,47 +27,6 @@ typedef struct memory_configuracion {
 	int RETARDO_MEMORIA;
 } memory_configuracion;
 
-int MAXIMO_TAMANO_DATOS = 100;
-
-char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo) {
-	char* valor;
-	if(config_has_property(archivo_configuracion, nombre_campo)){
-		valor = config_get_string_value(archivo_configuracion, nombre_campo);
-		printf("El %s es: %s\n", nombre_campo, valor);
-		return valor;
-	}
-	return NULL;
-}
-
-int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo) {
-	int valor;
-	if(config_has_property(archivo_configuracion, nombre_campo)){
-		valor = config_get_int_value(archivo_configuracion, nombre_campo);
-		printf("El %s es: %i\n", nombre_campo, valor);
-		return valor;
-	}
-	return NULL;
-}
-
-int get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo) {
-	char** valor;
-	if(config_has_property(archivo_configuracion, nombre_campo)){
-		valor = config_get_array_value(archivo_configuracion, nombre_campo);
-		printf("El %s es: %s\n", nombre_campo, valor);
-		return valor;
-	}
-	return NULL;
-}
-
-char get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo) {
-	char* valor;
-	if(config_has_property(archivo_configuracion, nombre_campo)){
-		valor = config_get_string_value(archivo_configuracion, nombre_campo);
-		printf("El %s es: %s\n", nombre_campo, valor);
-		return valor;
-	}
-	return NULL;
-}
 
 memory_configuracion get_configuracion() {
 	puts("Inicializando proceso Memory\n");
@@ -82,51 +45,95 @@ memory_configuracion get_configuracion() {
 }
 
 int main(void) {
-
 	memory_configuracion configuracion = get_configuracion();
-	/*
+	procesos procesos;
+
+	struct sockaddr_storage remoteaddr; // client address
+	socklen_t addrlen;
+	int nbytes;
+	char remoteIP[INET6_ADDRSTRLEN];
+	int yes=1;        // for setsockopt() SO_REUSEADDR, below
+	int socketActual, j, rv;
+	struct addrinfo hints, *ai, *p;
 	struct sockaddr_in direccionServidor;
-
-	char ip[20];
-	char port[15];
-	int host;
-
-	FILE *archivoConfig;
-	archivoConfig= fopen("/home/utnso/workspace/tp-2017-1c-AsadoClash/Memory/src/configMemory", "r");
-	fgets(&ip, sizeof(ip)+1, archivoConfig);
-	fgets(&port, sizeof(port)+1, archivoConfig);
-
-
-	//printf(conf);
-	//printf(ip);
-	//printf(port);
-
-	fclose(archivoConfig);
+	fd_set listaOriginal;
+	fd_set listaAux;
+	FD_ZERO(&listaOriginal);
+	FD_ZERO(&listaAux);
+	int fd_max = 1;
+	int newfd;
 
 	direccionServidor.sin_family = AF_INET;
 	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
-	direccionServidor.sin_port = htons(8888);
+	direccionServidor.sin_port = htons(configuracion.PUERTO);
 
-	int cliente = socket(AF_INET, SOCK_STREAM, 0);
-	if (connect(cliente, (void*) &direccionServidor, sizeof(direccionServidor)) != 0) {
-		perror("No se pudo conectar");
-		return 1;
-	}
+	un_socket socketServer = socket(AF_INET, SOCK_STREAM, 0);
+	setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+	int error=0;
+	error=bind(socketServer, (struct sockaddr *) &direccionServidor, sizeof(direccionServidor));
+	if(error <0)
+		perror('error en bind');
+		error=listen(socketServer, 256);
+	if(error <0)
+		perror('error en listen');
 
-	char *bienvenida = "hola soy [inserte nombre]";
-	send(cliente, bienvenida, strlen(bienvenida), 0);
-	//free(bienvenida);
+	FD_SET(socketServer,&listaOriginal);
+	fd_max=socketServer;
 
-	while (1) {
-		char mensaje[1000];
+	while(1){
+		listaAux = listaOriginal;
+		select(fd_max + 1, &listaAux, NULL, NULL, NULL);
+		for(socketActual = 0; socketActual <= fd_max; socketActual++) {
+			if (FD_ISSET(socketActual, &listaAux)) {
+				if (socketActual == socketServer) { //es una conexion nueva
+					newfd = aceptar_conexion(socketActual);
+					FD_SET(newfd, &listaOriginal); //Agregar al master SET
+					if (newfd > fd_max) {    //Update el Maximo
+						fd_max = newfd;
+					}
+		            printf("Memoria recibio una nueva conexion\n");
 
-		recv(cliente, mensaje, 100, 0);
-		printf("%c /n", mensaje);
+				} else {
+					t_paquete* paqueteRecibido = recibir(socketActual);
+					switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
+						case cop_handshake_kernel:
+							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
+							proceso_kernel nuevo_nodo_kernel;
+							nuevo_nodo_kernel.socket = socketActual;
+							procesos.kernel = nuevo_nodo_kernel;
+					    break;
 
-		scanf("%s", mensaje);
-		send(cliente, mensaje, strlen(mensaje), 0);
-	}
+						case cop_handshake_cpu:
+							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
+							proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
+							proceso_cpu* auxiliar_cpu;
+							proceso_cpu* ultimo_nodo_cpu;
+							auxiliar_cpu = procesos.cpus;
+							while(auxiliar_cpu != NULL){
+								ultimo_nodo_cpu = auxiliar_cpu;
+								auxiliar_cpu = (proceso_cpu*)auxiliar_cpu->siguiente;
+							}
+							if(ultimo_nodo_cpu == NULL){
+								procesos.cpus = nuevo_nodo_cpu;
+							}else{
+								ultimo_nodo_cpu->siguiente = nuevo_nodo_cpu;
+							}
+							nuevo_nodo_cpu->habilitado = true;
+							nuevo_nodo_cpu->socket = socketActual;
+						break;
+					}
+				}
+			}
+			listaAux = listaOriginal;
+		}// for
+	}//while
 
+
+	/*chau
+	socketKernel = aceptar_conexion(socketServer);
+	t_paquete* paqueteRecibido = recibir(socketKernel);
+	esperar_handshake(socketKernel, paqueteRecibido, cop_handshake_memoria);
 	*/
+
 	return 0;
 }
