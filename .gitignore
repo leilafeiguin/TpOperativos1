@@ -1,6 +1,6 @@
 #RemoteSystemsTempFiles
-.metadata
-.d
+*.metadata
+*.d
 
 # Object files
 *.o
