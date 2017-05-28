@@ -158,7 +158,7 @@ bool realizar_handshake(un_socket socket_del_servidor, int cop_handshake) {
 
 }
 
-bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_handshake) {
+bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_handshake, int cop_handshake) {
 
 	bool resultado = string_equals_ignore_case(
 			(char *) inicio_del_handshake->data, "Inicio autenticacion");
@@ -169,13 +169,13 @@ bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_hands
 
 		char * respuesta = malloc(12);
 		respuesta = "Autenticado";
-		enviar(socket_del_cliente, cop_handshake_kernel, 12, respuesta);
+		enviar(socket_del_cliente, cop_handshake, 12, respuesta);
 
 	} else {
 
 		char * respuesta = malloc(6);
 		respuesta = "Error";
-		enviar(socket_del_cliente, cop_handshake_kernel, 6, respuesta);
+		enviar(socket_del_cliente, cop_handshake, 6, respuesta);
 
 	}
 

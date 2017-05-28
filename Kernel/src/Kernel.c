@@ -48,52 +48,26 @@ kernell_configuracion get_configuracion() {
 	return configuracion;
 }
 
-//ESTRUCTURAS PROCESOS
-typedef struct proceso_consola{
-	bool habilitado;
-	int socket;
-	void* siguiente;
-}proceso_consola;
-
-
-typedef struct proceso_cpu{
-	bool habilitado;
-	int socket;
-	void* siguiente;
-}proceso_cpu;
-
-typedef struct proceso_memoria{
-	bool habilitado;
-	int socket;
-	void* siguiente;
-}proceso_memoria;
-
-typedef struct proceso_fileSystem{
-	bool habilitado;
-	int socket;
-	void* siguiente;
-}proceso_fileSystem;
-
-
-typedef struct procesos{
-	proceso_consola* consolas;
-	proceso_cpu* cpus;
-	proceso_memoria* memorias;
-	proceso_fileSystem* fileSystems;
-}procesos;
-
 typedef struct pcb{
 	int PID;// Identificador del proceso
 	int PC;// Program Counter
-	// Referencia a la tabla de Archivos del Proceso
+	// ??? Referencia a la tabla de Archivos del Proceso
 	int SP;// Posicion del Stack
 	int EC;// Exit Code
 }pcb;
 
 int main(void){
 	kernell_configuracion configuracion = get_configuracion();
-
 	procesos procesos;
+
+//--------------------CONEXION CON MEMORIA-----------------------------
+	un_socket socketMemoria = conectar_a(configuracion.IP_MEMORIA,configuracion.PUERTO_MEMORIA);
+	realizar_handshake(socketMemoria, cop_handshake_kernel);
+	proceso_memoria nodo_memoria;
+	procesos.memoria = nodo_memoria;
+
+//---------------------------------------------------------------------
+
 
 	fd_set listaOriginal;
 	fd_set listaAux;
@@ -125,7 +99,7 @@ int main(void){
 		perror('error en bind');
 	error=listen(socketServer, 256);
 	if(error <0)
-			perror('error en listen');
+		perror('error en listen');
 
 	FD_SET(socketServer,&listaOriginal);
 	fd_max=socketServer;
@@ -147,7 +121,7 @@ while(1){
 				t_paquete* paqueteRecibido = recibir(socketActual);
 				switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
 					case cop_handshake_consola:
-						esperar_handshake(socketActual, paqueteRecibido);
+						esperar_handshake(socketActual, paqueteRecibido, cop_handshake_kernel);
 						proceso_consola* nuevo_nodo_consola = malloc(sizeof(proceso_consola));
 						proceso_consola* auxiliar_consola;
 						proceso_consola* ultimo_nodo_consola;
@@ -164,8 +138,9 @@ while(1){
 						nuevo_nodo_consola->habilitado = true;
 						nuevo_nodo_consola->socket = socketActual;
 				    break;
+
 					case cop_handshake_cpu:
-						esperar_handshake(socketActual, paqueteRecibido);
+						esperar_handshake(socketActual, paqueteRecibido, cop_handshake_kernel);
 						proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
 						proceso_cpu* auxiliar_cpu;
 						proceso_cpu* ultimo_nodo_cpu;
@@ -182,21 +157,6 @@ while(1){
 						nuevo_nodo_cpu->habilitado = true;
 						nuevo_nodo_cpu->socket = socketActual;
 					break;
-
-					case cop_handshake_memoria://no se si no le falta algo
-						esperar_handshake(socketActual, paqueteRecibido);
-						proceso_memoria* nuevo_nodo_memoria = malloc(sizeof(proceso_memoria));
-						nuevo_nodo_memoria->habilitado = true;
-						nuevo_nodo_memoria->socket = socketActual;
-					break;
-
-					case cop_handshake_fileSystem://no se si no le falta algo
-						esperar_handshake(socketActual, paqueteRecibido);
-						proceso_fileSystem* nuevo_nodo_fileSystem = malloc(sizeof(proceso_fileSystem));
-						nuevo_nodo_fileSystem->habilitado = true;
-						nuevo_nodo_fileSystem->socket = socketActual;
-					break;
-
 				}
 			}
 		}

@@ -69,6 +69,7 @@ int main(void) {
 			}
 				break;
 			case finalizarPrograma:
+
 				printf("Ingrese el pid del archivo a finalizar:");
 				int pid;
 				scanf("%s\n",pid);
@@ -79,8 +80,7 @@ int main(void) {
 					programasActuales.programa = programasActuales.programa->siguiente;
 				}
 				if(programasActuales.programa->siguiente == NULL) {
-					matar_Conexion(programasActuales.programa->processID);
-				}
+					matar_Conexion(programasActuales.programa->processID);				}
 				else{
 					programas* auxiliarSiguiente = programasActuales.programa->siguiente;
 					auxiliarAnterior->programa->siguiente = auxiliarSiguiente;
@@ -89,6 +89,7 @@ int main(void) {
 				free(programasActuales.programa);
 				break;
 			case desconectarConsola:
+
 				//finalizar todos los hilos
 				while(programasActuales.programa != NULL){
 					matar_Conexion(programasActuales.programa->processID);
