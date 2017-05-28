@@ -63,18 +63,18 @@ int main(void) {
 				break;
 			case finalizarPrograma:
 				printf("Ingrese el path del archivo a ejecutar:");
-				char* path;
+				//char* path;
 				scanf("%s\n",path);
 				if(comprobar_archivo(path)){
 					//exit();
 				}
 				break;
 			case desconectarConsola:
-				pthread_exit();
+				//pthread_exit();
 				//finalizar todos los hilos
 				break;
 			case limpiarConsola:
-				System("clear");
+				//System("clear");
 				break;
 		}
 	}
