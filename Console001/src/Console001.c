@@ -46,35 +46,45 @@ void hiloPrograma(char* path);
 
 
 int main(void) {
+	un_socket kernel = conectar_a(configuracion.IP_KERNEL,configuracion.PUERTO_KERNEL);
+	realizar_handshake(kernel, cop_handshake_consolaInterfazUsuario);
+
+
 	configuracion = get_configuracion();
 	while(1){
 		printf("Ingrese la opcion deseada:\n1) Iniciar Programa\n2) Finalizar Programa\n3) Desconectar Consola\n4) Limpiar Mensajes\n");
 		int seleccion;
 		scanf("%i\n",seleccion);
 		switch(seleccion){
-			case iniciarPrograma:
+			case iniciarPrograma: {
 				printf("Ingrese el path del archivo a ejecutar:");
-				char* path; //hace falta malloc?
+				char* path= malloc(255); //hace falta malloc?
 				scanf("%s\n",path);
 				if(comprobar_archivo(path)){
+					pthread_t hilo;
+					pthread_create(&hilo, NULL,hiloPrograma,(void*)path);
 					//como logro que identifique a cada hilo de forma distinta
 					//pthread_create();
 				}
+			}
 				break;
 			case finalizarPrograma:
-				printf("Ingrese el path del archivo a ejecutar:");
-				//char* path;
-				scanf("%s\n",path);
-				if(comprobar_archivo(path)){
-					//exit();
+				printf("Ingrese el pid del archivo a finalizar:");
+				int pid;
+				scanf("%s\n",pid);
+				enviar(kernel, 8, sizeof(pid), pid);
+				break;
+
+			case desconectarConsola:
+				//finalizar todos los hilos
+				while(programasActuales.programa != NULL){
+					enviar(kernel, 8, sizeof(pid), pid);
+					pthread_join(programasActuales.programa->threadID,NULL);
+					programasActuales.programa= programasActuales.programa->siguiente;
 				}
 				break;
-			case desconectarConsola:
-				//pthread_exit();
-				//finalizar todos los hilos
-				break;
 			case limpiarConsola:
-				//System("clear");
+				system("clear");
 				break;
 		}
 	}
@@ -113,9 +123,17 @@ void hiloPrograma(char* path){
 			case cop_imprimi:
 				printf("%s\n",(char*)paqueteRecibido->data);
 				break;
-			case cop_terminar_proceso:
-				//proceso que implica limpiarse de la lista de programas
-				//instruccion para terminarse a el mismo? esto liberaria el paquete en el proceso?
+			case cop_terminar_proceso:{
+				programas* auxiliarAnterior = programasActuales.programa;
+				int posicion = 0;
+				while(programasActuales.programa->processID != pid){
+					auxiliarAnterior = programasActuales.programa;
+					programasActuales.programa = programasActuales.programa->siguiente;
+				}
+				free(programasActuales.programa);
+				liberar_paquete(paqueteRecibido);
+				return;
+			}
 				break;
 		}
 		liberar_paquete(paqueteRecibido);
