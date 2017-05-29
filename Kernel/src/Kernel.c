@@ -4,16 +4,15 @@
 
 #define TRUE   1
 #define FALSE  0
-#define PORT 8888
 
 //ESTRUCTURA ARCHIVO CONFIGURACION
 typedef struct kernell_configuracion {
-	int PUERTO_PROG;
-	int PUERTO_CPU;
+	char* PUERTO_PROG;
+	char* PUERTO_CPU;
 	char* IP_MEMORIA;
-	int PUERTO_MEMORIA;
+	char* PUERTO_MEMORIA;
 	char* IP_FS;
-	int PUERTO_FS;
+	char* PUERTO_FS;
 	int QUANTUM;
 	int QUANTUM_SLEEP;
 	char* ALGORITMO;
@@ -31,15 +30,15 @@ kernell_configuracion get_configuracion() {
 	// Obtiene el archivo de configuracion
 	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Kernel/config-kernell.cfg";
 	t_config* archivo_configuracion = config_create(path);
-	configuracion.PUERTO_PROG = get_campo_config_int(archivo_configuracion, "PUERTO_PROG");
-	configuracion.PUERTO_CPU = get_campo_config_int(archivo_configuracion, "PUERTO_CPU");
-	configuracion.IP_MEMORIA = get_campo_config_char(archivo_configuracion, "IP_MEMORIA");
-	configuracion.PUERTO_MEMORIA = get_campo_config_int(archivo_configuracion, "PUERTO_MEMORIA");
-	configuracion.IP_FS = get_campo_config_char(archivo_configuracion, "IP_FS");
-	configuracion.PUERTO_FS = get_campo_config_int(archivo_configuracion, "PUERTO_FS");
+	configuracion.PUERTO_PROG = get_campo_config_string(archivo_configuracion, "PUERTO_PROG");
+	configuracion.PUERTO_CPU = get_campo_config_string(archivo_configuracion, "PUERTO_CPU");
+	configuracion.IP_MEMORIA = get_campo_config_string(archivo_configuracion, "IP_MEMORIA");
+	configuracion.PUERTO_MEMORIA = get_campo_config_string(archivo_configuracion, "PUERTO_MEMORIA");
+	configuracion.IP_FS = get_campo_config_string(archivo_configuracion, "IP_FS");
+	configuracion.PUERTO_FS = get_campo_config_string(archivo_configuracion, "PUERTO_FS");
 	configuracion.QUANTUM = get_campo_config_int(archivo_configuracion, "QUANTUM");
 	configuracion.QUANTUM_SLEEP = get_campo_config_int(archivo_configuracion, "QUANTUM_SLEEP");
-	configuracion.ALGORITMO = get_campo_config_char(archivo_configuracion, "ALGORITMO");
+	configuracion.ALGORITMO = get_campo_config_string(archivo_configuracion, "ALGORITMO");
 	configuracion.GRADO_MULTIPROG = get_campo_config_int(archivo_configuracion, "GRADO_MULTIPROG");
 	configuracion.SEM_IDS = get_campo_config_array(archivo_configuracion, "SEM_IDS");
 	configuracion.SEM_INIT = get_campo_config_array(archivo_configuracion, "SEM_INIT");
@@ -89,7 +88,7 @@ int main(void){
 
 	direccionServidor.sin_family = AF_INET;
 	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
-	direccionServidor.sin_port = htons(PORT);
+	direccionServidor.sin_port = htons(configuracion.PUERTO_PROG);
 
 	un_socket socketServer = socket(AF_INET, SOCK_STREAM, 0);
 	setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
