@@ -26,7 +26,7 @@ endif
 all: CPU001
 
 dependents:
-	-cd /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug && $(MAKE) all
+	-cd /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug && $(MAKE) clean all
 
 # Tool invocations
 CPU001: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2017-1c-AsadoClash/Libraries/Debug/libLibraries.so
