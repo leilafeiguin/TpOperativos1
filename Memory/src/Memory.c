@@ -27,6 +27,7 @@ typedef struct memory_configuracion {
 	int RETARDO_MEMORIA;
 } memory_configuracion;
 
+void* bloqueMemoria;
 
 memory_configuracion get_configuracion() {
 	puts("Inicializando proceso Memory\n");
@@ -34,13 +35,14 @@ memory_configuracion get_configuracion() {
 	// Obtiene el archivo de configuracion
 	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Memory/config-memory.cfg";
 	t_config* archivo_configuracion = config_create(path);
-
 	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");
 	configuracion.MARCOS = get_campo_config_int(archivo_configuracion, "MARCOS");
 	configuracion.MARCOS_SIZE = get_campo_config_int(archivo_configuracion, "MARCOS_SIZE");
 	configuracion.ENTRADAS_CACHE = get_campo_config_int(archivo_configuracion, "ENTRADAS_CACHE");
 	configuracion.CACHE_X_PROC = get_campo_config_int(archivo_configuracion, "CHACHE_X_PROC");
 	configuracion.RETARDO_MEMORIA = get_campo_config_int(archivo_configuracion, "RETARDO_MEMORIA");
+
+	bloqueMemoria = malloc(configuracion.MARCOS * configuracion.MARCOS_SIZE);
 	return configuracion;
 }
 
