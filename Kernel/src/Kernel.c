@@ -47,13 +47,24 @@ kernell_configuracion get_configuracion() {
 	return configuracion;
 }
 
+typedef struct tablaArchivosAbiertos{
+	char* nombreArchivo;
+	int descriptor;
+	void* siguiente;
+}tablaArchivosAbiertos;
+
 typedef struct pcb{
 	int PID;// Identificador del proceso
 	int PC;// Program Counter
-	// ??? Referencia a la tabla de Archivos del Proceso
+	tablaArchivosAbiertos* tablaDeArchivos;// Referencia a la tabla de Archivos del Proceso
 	int SP;// Posicion del Stack
 	int EC;// Exit Code
 }pcb;
+
+typedef struct listaDePCBs{
+	pcb* pcb;
+	void* siguiente;
+}listaDePCBs;
 
 int main(void){
 	kernell_configuracion configuracion = get_configuracion();
