@@ -16,11 +16,18 @@ bool termino = false;
 
 t_puntero definirVariable(t_nombre_variable variable) {
 	printf("definir la variable %c\n", variable);
+	//guardar contexto de ejecucion
+	//solicitar espacio para la variable a memoria
+	//guardar el valor de la variable en el stack
+	//devolver el puntero a memoria de dicha variable
 	return POSICION_MEMORIA;
 }
 
 t_puntero obtenerPosicionVariable(t_nombre_variable variable) {
 	printf("Obtener posicion de %c\n", variable);
+	//la busqueda en el segmento se delega o se hace aca? en caso de que se haga aca:
+	//solicitar segmento (?)
+	//algoritmo de busqueda
 	return POSICION_MEMORIA;
 }
 
