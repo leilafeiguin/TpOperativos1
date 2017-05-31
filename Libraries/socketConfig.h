@@ -24,18 +24,18 @@
 
 int MAXIMO_TAMANO_DATOS = 100;
 
-enum codigos_de_operacion{
+enum codigos_de_operacion {
 	cop_generico = 0,
 	cop_handshake_consola = 1,
 	cop_handshake_cpu = 2,
-	cop_handshake_memoria =3,
+	cop_handshake_memoria = 3,
 	cop_handshake_fileSystem = 4,
 	cop_handshake_kernel = 5,
 	cop_archivo_programa = 6,
 	cop_imprimi = 7,
 	cop_terminar_proceso = 8,
 	cop_handshake_consolaInterfazUsuario = 9
-	//cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
+//cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
 };
 
 typedef int un_socket;
@@ -45,41 +45,47 @@ typedef struct {
 	void * data;
 } t_paquete;
 
+enum estados_proceso {
+	estado_new = 0,
+	estado_ready = 1,
+	estado_exit = 2,
+	estado_exec = 3,
+	estado_block = 4
+};
+
 //------------ESTRUCTURAS PROCESOS----------------
-typedef struct proceso_consola{
+typedef struct proceso_consola {
 	bool habilitado;
 	int socket;
 	void* siguiente;
-}proceso_consola;
+} proceso_consola;
 
-typedef struct proceso_cpu{
+typedef struct proceso_cpu {
 	bool habilitado;
 	int socket;
 	void* siguiente;
-}proceso_cpu;
+} proceso_cpu;
 
-typedef struct proceso_memoria{
+typedef struct proceso_memoria {
 	int socket;
-}proceso_memoria;
+} proceso_memoria;
 
-typedef struct proceso_fileSystem{
+typedef struct proceso_fileSystem {
 	int socket;
-}proceso_fileSystem;
+} proceso_fileSystem;
 
-typedef struct proceso_kernel{
+typedef struct proceso_kernel {
 	int socket;
-}proceso_kernel;
+} proceso_kernel;
 
-
-typedef struct procesos{
+typedef struct procesos {
 	proceso_consola* consolas;
 	proceso_cpu* cpus;
 	proceso_memoria memoria;
 	proceso_fileSystem fileSystem;
 	proceso_kernel kernel;
-}procesos;
+} procesos;
 //------------FIN ESTRUCTURAS PROCESOS----------------
-
 
 /**	@NAME: conectar_a
  * 	@DESC: Intenta conectarse.
@@ -131,15 +137,18 @@ bool realizar_handshake(un_socket socket_del_servidor, int cop_handshake);
 /**	@NAME: esperar_handshake
  *
  */
-bool esperar_handshake(un_socket socket_del_cliente, t_paquete* inicio_del_handshake, int cop_handshake);
+bool esperar_handshake(un_socket socket_del_cliente,
+		t_paquete* inicio_del_handshake, int cop_handshake);
 
 char get_campo_config_char(t_config* archivo_configuracion, char* nombre_campo);
 
 int get_campo_config_int(t_config* archivo_configuracion, char* nombre_campo);
 
-char** get_campo_config_array(t_config* archivo_configuracion, char* nombre_campo);
+char** get_campo_config_array(t_config* archivo_configuracion,
+		char* nombre_campo);
 
-char* get_campo_config_string(t_config* archivo_configuracion, char* nombre_campo);
+char* get_campo_config_string(t_config* archivo_configuracion,
+		char* nombre_campo);
 
 /**	@NAME: enviar_archivo
  *
@@ -147,6 +156,5 @@ char* get_campo_config_string(t_config* archivo_configuracion, char* nombre_camp
 void enviar_archivo(un_socket socket, char* path);
 
 bool comprobar_archivo(char* path);
-
 
 #endif /* SOCKETCONFIG_H_ */
