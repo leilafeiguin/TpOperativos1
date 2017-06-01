@@ -1,51 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <netinet/in.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <commons/log.h>
-#include <commons/collections/list.h>
-#include <commons/config.h>
-#include <socketConfig.h>
-#include <parser/parser.h>
+#include "Memory.h"
 
-#define TRUE   1
-#define FALSE  0
-
-typedef struct memory_configuracion {
-	int PUERTO;
-	int MARCOS;
-	int MARCOS_SIZE;
-	int ENTRADAS_CACHE;
-	int CACHE_X_PROC;
-	int RETARDO_MEMORIA;
-} memory_configuracion;
-
-void* bloqueMemoria;
-
-memory_configuracion get_configuracion() {
-	puts("Inicializando proceso Memory\n");
-	memory_configuracion configuracion;
-	// Obtiene el archivo de configuracion
-	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Memory/config-memory.cfg";
-	t_config* archivo_configuracion = config_create(path);
-	configuracion.PUERTO = get_campo_config_int(archivo_configuracion, "PUERTO");
-	configuracion.MARCOS = get_campo_config_int(archivo_configuracion, "MARCOS");
-	configuracion.MARCOS_SIZE = get_campo_config_int(archivo_configuracion, "MARCOS_SIZE");
-	configuracion.ENTRADAS_CACHE = get_campo_config_int(archivo_configuracion, "ENTRADAS_CACHE");
-	configuracion.CACHE_X_PROC = get_campo_config_int(archivo_configuracion, "CHACHE_X_PROC");
-	configuracion.RETARDO_MEMORIA = get_campo_config_int(archivo_configuracion, "RETARDO_MEMORIA");
-
-	bloqueMemoria = malloc(configuracion.MARCOS * configuracion.MARCOS_SIZE);
-	return configuracion;
-}
 
 int main(void) {
 	memory_configuracion configuracion = get_configuracion();
