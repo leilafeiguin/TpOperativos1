@@ -1,6 +1,7 @@
 
 #include <socketConfig.h>
 #include <commons/config.h>
+#include <sys/inotify.h>
 
 #define TRUE   1
 #define FALSE  0
@@ -21,14 +22,15 @@ typedef struct kernell_configuracion {
 	char** SEM_IDS;
 	char** SEM_INIT;
 	char** SHARED_VARS;
+
 } kernell_configuracion;
 
+const char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Kernel/config-kernell.cfg";
 
 kernell_configuracion get_configuracion() {
 	printf("Inicializando proceso Kernel\n");
 	kernell_configuracion configuracion;
 	// Obtiene el archivo de configuracion
-	char* path = "/home/utnso/workspace/tp-2017-1c-AsadoClash/Kernel/config-kernell.cfg";
 	t_config* archivo_configuracion = config_create(path);
 	configuracion.PUERTO_PROG = get_campo_config_string(archivo_configuracion, "PUERTO_PROG");
 	configuracion.PUERTO_CPU = get_campo_config_string(archivo_configuracion, "PUERTO_CPU");
@@ -67,6 +69,7 @@ typedef struct listaDePCBs{
 }listaDePCBs;
 
 int main(void){
+	printf("Inicializando proceso Kernel\n");
 	kernell_configuracion configuracion = get_configuracion();
 	procesos procesos;
 
@@ -112,7 +115,19 @@ int main(void){
 		perror('error en listen');
 
 	FD_SET(socketServer,&listaOriginal);
-	fd_max=socketServer;
+
+	int update_config = inotify_init();
+
+	FD_SET(update_config,&listaOriginal);
+
+	if(update_config > socketServer) {
+		fd_max = update_config;
+	} else {
+		fd_max = socketServer;
+	}
+
+	inotify_add_watch(update_config, path, IN_MODIFY);
+
 
 while(1){
 	listaAux = listaOriginal;
@@ -127,6 +142,8 @@ while(1){
 				}
 	            printf("Kernel recibio una nueva conexion\n");
 
+			} else if(socketActual == update_config){ //considerar que cambio ocurrio
+				configuracion = get_configuracion(); //actualiza la config
 			} else {
 				t_paquete* paqueteRecibido = recibir(socketActual);
 				switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
