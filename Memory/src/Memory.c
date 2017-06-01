@@ -14,6 +14,7 @@
 #include <commons/collections/list.h>
 #include <commons/config.h>
 #include <socketConfig.h>
+#include <parser/parser.h>
 
 #define TRUE   1
 #define FALSE  0
@@ -98,7 +99,7 @@ int main(void) {
 				} else {
 					t_paquete* paqueteRecibido = recibir(socketActual);
 					switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
-						case cop_handshake_kernel:
+						case cop_handshake_kernel: //validar que no haya ya un kernel
 							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_kernel nuevo_nodo_kernel;
 							nuevo_nodo_kernel.socket = socketActual;
@@ -123,19 +124,19 @@ int main(void) {
 							nuevo_nodo_cpu->habilitado = true;
 							nuevo_nodo_cpu->socket = socketActual;
 						break;
+
+						case cop_obtener_direccion:
+							//int variable = (int) paqueteRecibido->data;
+							//se hace una busqueda de la variable
+							//t_puntero* posicion_variable;
+							//enviar(socketActual, cop_obtener_direccion, sizeof(t_puntero), posicion_variable);
+						break;
 					}
 				}
 			}
 			listaAux = listaOriginal;
 		}// for
 	}//while
-
-
-	/*chau
-	socketKernel = aceptar_conexion(socketServer);
-	t_paquete* paqueteRecibido = recibir(socketKernel);
-	esperar_handshake(socketKernel, paqueteRecibido, cop_handshake_memoria);
-	*/
 
 	return 0;
 }
