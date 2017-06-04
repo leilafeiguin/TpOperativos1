@@ -13,29 +13,23 @@ int main(void){
 
 //---------------------------------------------------------------------
 
-
 	fd_set listaOriginal;
 	fd_set listaAux;
 	FD_ZERO(&listaOriginal);
 	FD_ZERO(&listaAux);
-
 	int fd_max = 1;
 	int newfd;        // newly accept()ed socket descriptor
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
-
 	int nbytes;
 	char remoteIP[INET6_ADDRSTRLEN];
 	int yes=1;        // for setsockopt() SO_REUSEADDR, below
 	int socketActual, j, rv;
-
 	struct addrinfo hints, *ai, *p;
 	struct sockaddr_in direccionServidor;
-
 	direccionServidor.sin_family = AF_INET;
 	direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
 	direccionServidor.sin_port = htons(configuracion.PUERTO_PROG);
-
 	un_socket socketServer = socket(AF_INET, SOCK_STREAM, 0);
 	setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 	int error=0;
@@ -48,6 +42,7 @@ int main(void){
 
 	FD_SET(socketServer,&listaOriginal);
 
+//--------------------CONFIGURACION EN RUNTIME-------------------------
 	int update_config = inotify_init();
 
 	FD_SET(update_config,&listaOriginal);
@@ -59,7 +54,7 @@ int main(void){
 	}
 
 	inotify_add_watch(update_config, path, IN_MODIFY);
-
+//---------------------------------------------------------------------
 
 while(1){
 	listaAux = listaOriginal;
@@ -123,14 +118,23 @@ while(1){
 	}// for
 }//while
 
-
-
-
 void *get_in_addr(struct sockaddr *sa){
 	if (sa->sa_family == AF_INET) {return &(((struct sockaddr_in*)sa)->sin_addr);}
 	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
-
-
 	return 0;
 }
+
+void planificador(char* modo){
+	switch(modo){
+		case "FIFO":
+
+		break;
+		case "RR":
+
+		break;
+	}
+	return;
+}
+
+

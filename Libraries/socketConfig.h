@@ -64,6 +64,7 @@ typedef struct proceso_consola {
 typedef struct proceso_cpu {
 	bool habilitado;
 	int socket;
+	int estado;// para saber si esta corrriendo algo
 	void* siguiente;
 } proceso_cpu;
 
