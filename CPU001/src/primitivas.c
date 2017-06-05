@@ -11,11 +11,18 @@
 #include "primitivas.h"
 
 //static const int CONTENIDO_VARIABLE = 20;
-static const int POSICION_MEMORIA = 0x10;
+static int POSICION_MEMORIA = 0x10;
 bool termino = false;
+char* identificador_variable;
 
-t_puntero definirVariable(t_nombre_variable variable) {
-	printf("definir la variable %c\n", variable);
+t_puntero definirVariable(t_nombre_variable identificador_variable) {
+	printf("definir la variable %c\n", identificador_variable);
+	malloc(sizeof(identificador_variable));
+	//RESPONSABILIDAD MEMORIA:
+	//registrarEnStack(identificador_variable);
+	//registrarEnDiccionarioDeVariables(identificador_variable);
+	//POSICION_MEMORIA = posicionEnStack(identificador_variable); ¿Es lo mismo que la dirección a memoria? ¿&identificador_variable?
+
 	//guardar contexto de ejecucions
 	//solicitar espacio para la variable a memoria
 	//guardar el valor de la variable en el stack
@@ -31,15 +38,6 @@ t_puntero obtenerPosicionVariable(t_nombre_variable variable) {
 	return POSICION_MEMORIA;
 }
 
-void finalizar(void){
-	termino = true;
-	printf("Finalizar\n");
-}
-
-bool terminoElPrograma(void){
-	return termino;
-}
-
 t_valor_variable dereferenciar(t_puntero puntero) {
 	t_valor_variable CONTENIDO_VARIABLE = (int) &puntero;
 	printf("Dereferenciar %d y su valor es: %d\n", puntero, CONTENIDO_VARIABLE);
@@ -50,5 +48,18 @@ void asignar(t_puntero puntero, t_valor_variable variable) {
 	printf("Asignando en %d el valor %d\n", puntero, variable);
 	//&puntero = variable;
 }
+
+void finalizar(void){
+	termino = true;
+	printf("Finalizar\n");
+}
+
+bool terminoElPrograma(void){
+	return termino;
+}
+
+
+
+
 
 #endif /* PRIMITIVAS_C_ */
