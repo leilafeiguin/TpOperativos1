@@ -15,7 +15,7 @@
 #include <commons/log.h>
 #include <commons/collections/list.h>
 #include <socketConfig.h>
-#include <parser/parser.h>
+#include <pthread.h>
 
 #define TRUE   1
 #define FALSE  0

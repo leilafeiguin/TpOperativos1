@@ -54,13 +54,17 @@ int main(void) {
 					t_paquete* paqueteRecibido = recibir(socketActual);
 					switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
 						case cop_handshake_kernel: //validar que no haya ya un kernel
-							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
+							pthread_t hiloKernel;
+							pthread_create(&hiloKernel, NULL, hiloKernel_memoria, int socket_escucha);
+							/*esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_kernel nuevo_nodo_kernel;
 							nuevo_nodo_kernel.socket = socketActual;
 							procesos.kernel = nuevo_nodo_kernel;
+							*/
 					    break;
 
 						case cop_handshake_cpu:
+							/*
 							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
 							proceso_cpu* auxiliar_cpu;
@@ -77,6 +81,7 @@ int main(void) {
 							}
 							nuevo_nodo_cpu->habilitado = true;
 							nuevo_nodo_cpu->socket = socketActual;
+							*/
 						break;
 
 					}
@@ -89,4 +94,18 @@ int main(void) {
 	return 0;
 }
 
+
+//------------------------------------hilo para el manejo del kernel---------------------------
+void hiloKernel_memoria(int puertoEscucha){
+	while(1){
+
+		t_paquete* paqueteRecibido = recibir(puertoEscucha);
+		switch(paqueteRecibido->codigo_operacion){
+		case cop_memoria_inicializarPrograma:
+		break;
+		case cop_memoria_finalizarPrograma:
+		break;
+		}
+	}
+}
 

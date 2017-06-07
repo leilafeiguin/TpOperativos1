@@ -126,14 +126,6 @@ void *get_in_addr(struct sockaddr *sa){
 }
 
 void planificador(char* modo){
-	switch(modo){
-		case "FIFO":
-
-		break;
-		case "RR":
-
-		break;
-	}
 	return;
 }
 

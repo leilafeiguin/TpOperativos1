@@ -58,8 +58,4 @@ bool terminoElPrograma(void){
 	return termino;
 }
 
-
-
-
-
 #endif /* PRIMITIVAS_C_ */

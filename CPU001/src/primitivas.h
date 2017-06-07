@@ -8,9 +8,10 @@
 #ifndef PRIMITIVAS_H_
 #define PRIMITIVAS_H_
 
-#include <parser/parser.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <socketConfig.h>
+#include <parser/parser.h>
 
 /*
  * DEFINIR VARIABLE
