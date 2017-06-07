@@ -48,6 +48,7 @@ typedef struct pcb{
 	tablaArchivosAbiertos* tablaDeArchivos;// Referencia a la tabla de Archivos del Proceso
 	int SP;// Posicion del Stack
 	int EC;// Exit Code
+	int EP;//Estado del proceso
 }pcb;
 
 typedef struct listaDePCBs{

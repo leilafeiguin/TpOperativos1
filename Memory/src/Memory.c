@@ -79,12 +79,6 @@ int main(void) {
 							nuevo_nodo_cpu->socket = socketActual;
 						break;
 
-						case cop_obtener_direccion:
-							//int variable = (int) paqueteRecibido->data;
-							//se hace una busqueda de la variable
-							//t_puntero* posicion_variable;
-							//enviar(socketActual, cop_obtener_direccion, sizeof(t_puntero), posicion_variable);
-						break;
 					}
 				}
 			}
@@ -94,3 +88,5 @@ int main(void) {
 
 	return 0;
 }
+
+
