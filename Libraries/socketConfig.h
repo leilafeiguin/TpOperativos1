@@ -35,7 +35,13 @@ enum codigos_de_operacion {
 	cop_imprimi = 7,
 	cop_terminar_proceso = 8,
 	cop_handshake_consolaInterfazUsuario = 9,
-	cop_obtener_direccion = 10
+	cop_obtener_direccion = 10,
+	cop_memoria_inicializarPrograma = 11,
+	cop_memoria_solicitarBytes = 12,
+	cop_memoria_almacenarBytes = 13,
+	cop_memoria_asignarPaginas = 14,
+	cop_memoria_finalizarPrograma = 15
+
 //cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
 };
 
