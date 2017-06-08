@@ -22,7 +22,6 @@
 #include <commons/config.h>
 #include <unistd.h>
 
-int MAXIMO_TAMANO_DATOS = 100;
 
 enum codigos_de_operacion {
 	cop_generico = 0,
