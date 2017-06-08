@@ -40,7 +40,12 @@ enum codigos_de_operacion {
 	cop_memoria_solicitarBytes = 12,
 	cop_memoria_almacenarBytes = 13,
 	cop_memoria_asignarPaginas = 14,
-	cop_memoria_finalizarPrograma = 15
+	cop_memoria_finalizarPrograma = 15,
+	cop_filesystem_validarArchivo = 16,
+	cop_filesystem_crearArchivo = 17,
+	cop_filesystem_borrar = 18,
+	cop_filesystem_obtenerDatos = 19,
+	cop_filesystem_guardarDatos = 20
 
 //cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
 };
@@ -93,6 +98,13 @@ typedef struct procesos {
 	proceso_fileSystem fileSystem;
 	proceso_kernel kernel;
 } procesos;
+
+typedef struct manejoFileSystem {
+	char* path;
+	int offset; //desplazamiento
+	int size;
+	void* buffer; //char* o void*??
+} manejoFileSystem;
 //------------FIN ESTRUCTURAS PROCESOS----------------
 
 /**	@NAME: conectar_a
