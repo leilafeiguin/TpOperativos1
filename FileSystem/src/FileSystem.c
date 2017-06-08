@@ -34,7 +34,7 @@ int main(void) {
 			case cop_filesystem_obtenerDatos:
 			break;
 
-			case cop_filesystem_guardarDatos;
+			case cop_filesystem_guardarDatos:
 			break;
 
 

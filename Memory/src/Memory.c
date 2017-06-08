@@ -54,8 +54,8 @@ int main(void) {
 					t_paquete* paqueteRecibido = recibir(socketActual);
 					switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
 						case cop_handshake_kernel: //validar que no haya ya un kernel
-							pthread_t hiloKernel;
-							pthread_create(&hiloKernel, NULL, hiloKernel_memoria, int socket_escucha);
+							//pthread_t hiloKernel;
+							//pthread_create(&hiloKernel, NULL, hiloKernel_memoria, int socket_escucha);
 							/*esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_kernel nuevo_nodo_kernel;
 							nuevo_nodo_kernel.socket = socketActual;
