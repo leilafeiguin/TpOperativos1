@@ -22,7 +22,6 @@
 #include <commons/config.h>
 #include <unistd.h>
 
-
 enum codigos_de_operacion {
 	cop_generico = 0,
 	cop_handshake_consola = 1,
@@ -65,6 +64,55 @@ enum estados_proceso {
 };
 
 //------------ESTRUCTURAS PROCESOS----------------
+typedef struct indiceDeCodigo{
+	int posicion;
+	int longitud;
+	void* siguiente;
+}indiceDeCodigo;
+
+typedef struct indiceDeEtiquetas{
+
+}indiceDeEtiquetas;
+
+typedef struct posicionMemoria{
+	int pagina;
+	int offset;
+	int size;
+}posicionMemoria;
+
+typedef struct argumentos{
+	posicionMemoria argumento;
+	void* siguiente;
+}argumentos;
+
+typedef struct variables{
+	char nombreVar;
+	posicionMemoria posMem;
+	void* siguiente;
+}variables;
+
+typedef struct indiceDeStack{
+	argumentos argumentos;
+	variables variables;
+	int retPos; //posision de retorno
+	posicionMemoria retVal; //posicion del return value
+}indiceDeStack;
+
+typedef struct pcb{
+	int PID;// Identificador del proceso
+	int ProgramCounter;// Program Counter
+	int PaginasCodigo; //Paginas de codigo
+	int ExitCode;// Exit Code
+	indiceDeCodigo indiceDeCodigo;
+	indiceDeEtiquetas indiceDeEqtiquetas;
+	indiceDeStack indiceDeStack;
+}pcb;
+
+typedef struct listaDePCBs{
+	pcb* pcb;
+	void* siguiente;
+}listaDePCBs;
+
 typedef struct proceso_consola {
 	bool habilitado;
 	int socket;
