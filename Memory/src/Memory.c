@@ -64,6 +64,8 @@ int main(void) {
 					    break;
 
 						case cop_handshake_cpu:
+							pthread_t hiloCpu;
+							pthread_create(&hiloCpu, NULL, hiloCpu_memoria, int socket_escucha);
 							/*
 							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
@@ -102,8 +104,25 @@ void hiloKernel_memoria(int puertoEscucha){
 		t_paquete* paqueteRecibido = recibir(puertoEscucha);
 		switch(paqueteRecibido->codigo_operacion){
 		case cop_memoria_inicializarPrograma:
+
 		break;
 		case cop_memoria_finalizarPrograma:
+		break;
+		}
+	}
+}
+
+//------------------------------------hilo para el manejo de la cpu--------------------------
+void hiloCpu_memoria(int puertoEscucha){
+	while(1){
+
+		t_paquete* paqueteRecibido = recibir(puertoEscucha);
+		switch(paqueteRecibido->codigo_operacion){
+		case cop_memoria_solicitarBytes:
+		break;
+		case cop_memoria_almacenarBytes:
+		break;
+		case cop_memoria_asignarPaginas:
 		break;
 		}
 	}
