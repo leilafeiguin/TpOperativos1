@@ -29,6 +29,13 @@ typedef struct memory_configuracion {
 	int RETARDO_MEMORIA;
 } memory_configuracion;
 
+typedef struct tabla_de_paginas {
+	int pid;
+	int numero_pagina;
+	int numero_frame;
+	void* siguiente;
+} tabla_de_paginas;
+
 void* bloqueMemoria;
 
 memory_configuracion get_configuracion() {

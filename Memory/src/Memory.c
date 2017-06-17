@@ -4,7 +4,7 @@
 int main(void) {
 	memory_configuracion configuracion = get_configuracion();
 	procesos procesos;
-
+	inicializarMemoria(configuracion);
 	struct sockaddr_storage remoteaddr; // client address
 	socklen_t addrlen;
 	int nbytes;
@@ -55,6 +55,7 @@ int main(void) {
 					switch(paqueteRecibido->codigo_operacion){ //revisar validaciones de habilitados
 						case cop_handshake_kernel: //validar que no haya ya un kernel
 							pthread_t hiloKernel;
+							FD_CLR(socketActual, &listaOriginal);
 							pthread_create(&hiloKernel, NULL, hiloKernel_memoria, int socket_escucha);
 							/*esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_kernel nuevo_nodo_kernel;
@@ -65,7 +66,9 @@ int main(void) {
 
 						case cop_handshake_cpu:
 							pthread_t hiloCpu;
+							FD_CLR(socketActual, &listaOriginal);
 							pthread_create(&hiloCpu, NULL, hiloCpu_memoria, int socket_escucha);
+
 							/*
 							esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
 							proceso_cpu* nuevo_nodo_cpu = malloc(sizeof(proceso_cpu));
@@ -104,9 +107,14 @@ void hiloKernel_memoria(int puertoEscucha){
 		t_paquete* paqueteRecibido = recibir(puertoEscucha);
 		switch(paqueteRecibido->codigo_operacion){
 		case cop_memoria_inicializarPrograma:
-
+		{
+			t_parametros_memoria_inicializar* parametros = ((t_parametros_memoria_inicializar)paqueteRecibido->data);
+		}
 		break;
 		case cop_memoria_finalizarPrograma:
+		{
+			t_parametros_memoria_finalizar* parametros = ((t_parametros_memoria_finalizar)paqueteRecibido->data);
+		}
 		break;
 		}
 	}
@@ -119,12 +127,39 @@ void hiloCpu_memoria(int puertoEscucha){
 		t_paquete* paqueteRecibido = recibir(puertoEscucha);
 		switch(paqueteRecibido->codigo_operacion){
 		case cop_memoria_solicitarBytes:
+		{
+			t_parametros_memoria_leer* parametros = ((t_parametros_memoria_leer)paqueteRecibido->data);
+		}
 		break;
 		case cop_memoria_almacenarBytes:
+		{
+			t_parametros_memoria_escribir* parametros = ((t_parametros_memoria_escribir)paqueteRecibido->data);
+		}
 		break;
 		case cop_memoria_asignarPaginas:
+		{
+			t_parametros_memoria_asignar* parametros = ((t_parametros_memoria_asignar)paqueteRecibido->data);
+		}
 		break;
 		}
 	}
 }
 
+void inicializarMemoria (memory_configuracion configuracion){
+	bloqueMemoria = malloc (configuracion.MARCOS * configuracion.MARCOS_SIZE);
+	generarEstructurasAdministrativas (bloqueMemoria, configuracion);
+}
+
+void generarEstructurasAdministrativas (void *memoria, memory_configuracion configuracion){
+	tabla_de_paginas* tabla = malloc( (configuracion.MARCOS * (sizeof(tabla_de_paginas)) / configuracion.MARCOS_SIZE +1) * configuracion.MARCOS_SIZE);
+	tabla_de_paginas* auxiliarTabla = tabla;
+	for (int i=0; i<configuracion.MARCOS; i++){
+		auxiliarTabla->pid= -1;
+		auxiliarTabla->numero_pagina= -1;
+		auxiliarTabla->numero_frame= i;
+		auxiliarTabla=auxiliarTabla->siguiente;
+	}
+
+
+	memcpy(bloqueMemoria, tabla,(configuracion.MARCOS * (sizeof(tabla_de_paginas)) / configuracion.MARCOS_SIZE +1) * configuracion.MARCOS_SIZE);
+}

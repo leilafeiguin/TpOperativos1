@@ -52,6 +52,35 @@ typedef struct {
 	void * data;
 } t_paquete;
 
+typedef struct{
+	int pid;
+	int paginas;
+} t_parametros_memoria_inicializar;
+
+typedef struct{
+	int pid;
+	int numero_pagina;
+	int offset;
+	int tamanio;
+} t_parametros_memoria_leer;
+
+typedef struct{
+	int pid;
+	int paginas;
+} t_parametros_memoria_asignar;
+
+typedef struct{
+	int pid;
+	int offset;
+	int numero_pagina;
+	int tamanio;
+	void* buffer
+} t_parametros_memoria_escribir;
+
+typedef struct{
+	int pid;
+} t_parametros_memoria_finalizar;
+
 enum estados_proceso {
 	estado_new = 0,
 	estado_ready = 1,
