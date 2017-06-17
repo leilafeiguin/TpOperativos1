@@ -36,8 +36,9 @@ typedef struct tabla_de_paginas {
 	void* siguiente;
 } tabla_de_paginas;
 
-void* bloqueMemoria;
 
+void* bloqueMemoria;
+tabla_de_paginas* tabla_de_paginas;
 memory_configuracion get_configuracion() {
 	puts("Inicializando proceso Memory\n");
 	memory_configuracion configuracion;

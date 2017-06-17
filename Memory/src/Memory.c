@@ -109,6 +109,22 @@ void hiloKernel_memoria(int puertoEscucha){
 		case cop_memoria_inicializarPrograma:
 		{
 			t_parametros_memoria_inicializar* parametros = ((t_parametros_memoria_inicializar)paqueteRecibido->data);
+			tabla_de_paginas* tabla_aux=tabla_de_paginas;
+			int cantidadAsignadas = 0;
+			for(int i=0; i< parametros->paginas; i++){
+				//int numeroFrame=LLAMAR funcion hashing(parametros.pid, i)
+				//
+			}
+			while(tabla_aux->siguiente != NULL &&  cantidadAsignadas < parametros->paginas)
+			{
+				if (tabla_aux->pid == -1){
+					tabla_aux->pid=parametros->pid;
+					tabla_aux->numero_pagina = cantidadAsignadas;
+					cantidadAsignadas++;
+				}
+
+				tabla_aux=tabla_aux->siguiente;
+			}
 		}
 		break;
 		case cop_memoria_finalizarPrograma:
@@ -116,6 +132,18 @@ void hiloKernel_memoria(int puertoEscucha){
 			t_parametros_memoria_finalizar* parametros = ((t_parametros_memoria_finalizar)paqueteRecibido->data);
 		}
 		break;
+		}
+	}
+}
+
+tabla_de_paginas* BuscarFrameLibre(){
+
+	tabla_de_paginas* tabla_aux=tabla_de_paginas;
+	int cantidadAsignadas = 0;
+	while(tabla_aux->siguiente != NULL)
+	{
+		if (tabla_aux->pid == -1){
+			return tabla_aux;
 		}
 	}
 }
@@ -162,4 +190,5 @@ void generarEstructurasAdministrativas (void *memoria, memory_configuracion conf
 
 
 	memcpy(bloqueMemoria, tabla,(configuracion.MARCOS * (sizeof(tabla_de_paginas)) / configuracion.MARCOS_SIZE +1) * configuracion.MARCOS_SIZE);
+    tabla_de_paginas=bloqueMemoria;
 }
