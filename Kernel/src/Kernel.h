@@ -42,19 +42,10 @@ typedef struct tablaArchivosAbiertos{
 	void* siguiente;
 }tablaArchivosAbiertos;
 
-typedef struct pcb{
-	int PID;// Identificador del proceso
-	int PC;// Program Counter
-	tablaArchivosAbiertos* tablaDeArchivos;// Referencia a la tabla de Archivos del Proceso
-	int SP;// Posicion del Stack
-	int EC;// Exit Code
-	int EP;//Estado del proceso
-}pcb;
-
-typedef struct listaDePCBs{
-	pcb* pcb;
-	void* siguiente;
-}listaDePCBs;
+typedef struct PCBKernel{
+	int pid;
+	tablaArchivosAbiertos tabla;
+}PCBKernel;
 
 kernell_configuracion get_configuracion() {
 	printf("Inicializando proceso Kernel\n");

@@ -57,11 +57,7 @@ int main(void) {
 							pthread_t hiloKernel;
 							FD_CLR(socketActual, &listaOriginal);
 							pthread_create(&hiloKernel, NULL, hiloKernel_memoria, int socket_escucha);
-							/*esperar_handshake(socketActual, paqueteRecibido, cop_handshake_memoria);
-							proceso_kernel nuevo_nodo_kernel;
-							nuevo_nodo_kernel.socket = socketActual;
-							procesos.kernel = nuevo_nodo_kernel;
-							*/
+
 					    break;
 
 						case cop_handshake_cpu:

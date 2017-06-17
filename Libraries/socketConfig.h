@@ -22,8 +22,6 @@
 #include <commons/config.h>
 #include <unistd.h>
 
-int MAXIMO_TAMANO_DATOS = 100;
-
 enum codigos_de_operacion {
 	cop_generico = 0,
 	cop_handshake_consola = 1,
@@ -40,7 +38,12 @@ enum codigos_de_operacion {
 	cop_memoria_solicitarBytes = 12,
 	cop_memoria_almacenarBytes = 13,
 	cop_memoria_asignarPaginas = 14,
-	cop_memoria_finalizarPrograma = 15
+	cop_memoria_finalizarPrograma = 15,
+	cop_filesystem_validarArchivo = 16,
+	cop_filesystem_crearArchivo = 17,
+	cop_filesystem_borrar = 18,
+	cop_filesystem_obtenerDatos = 19,
+	cop_filesystem_guardarDatos = 20
 
 //cop_envio_pid = , es necesario o podemos asumir con seguridad que el kernel nos va a mandar el pid?
 };
@@ -90,6 +93,55 @@ enum estados_proceso {
 };
 
 //------------ESTRUCTURAS PROCESOS----------------
+typedef struct indiceDeCodigo{
+	int posicion;
+	int longitud;
+	void* siguiente;
+}indiceDeCodigo;
+
+typedef struct indiceDeEtiquetas{
+
+}indiceDeEtiquetas;
+
+typedef struct posicionMemoria{
+	int pagina;
+	int offset;
+	int size;
+}posicionMemoria;
+
+typedef struct argumentos{
+	posicionMemoria argumento;
+	void* siguiente;
+}argumentos;
+
+typedef struct variables{
+	char nombreVar;
+	posicionMemoria posMem;
+	void* siguiente;
+}variables;
+
+typedef struct indiceDeStack{
+	argumentos argumentos;
+	variables variables;
+	int retPos; //posision de retorno
+	posicionMemoria retVal; //posicion del return value
+}indiceDeStack;
+
+typedef struct pcb{
+	int PID;// Identificador del proceso
+	int ProgramCounter;// Program Counter
+	int PaginasCodigo; //Paginas de codigo
+	int ExitCode;// Exit Code
+	indiceDeCodigo indiceDeCodigo;
+	indiceDeEtiquetas indiceDeEqtiquetas;
+	indiceDeStack indiceDeStack;
+}pcb;
+
+typedef struct listaDePCBs{
+	pcb* pcb;
+	void* siguiente;
+}listaDePCBs;
+
 typedef struct proceso_consola {
 	bool habilitado;
 	int socket;
@@ -122,6 +174,13 @@ typedef struct procesos {
 	proceso_fileSystem fileSystem;
 	proceso_kernel kernel;
 } procesos;
+
+typedef struct manejoFileSystem {
+	char* path;
+	int offset; //desplazamiento
+	int size;
+	void* buffer; //char* o void*??
+} manejoFileSystem;
 //------------FIN ESTRUCTURAS PROCESOS----------------
 
 /**	@NAME: conectar_a
